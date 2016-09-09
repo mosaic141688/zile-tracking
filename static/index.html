@@ -30,6 +30,12 @@
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
     <link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
 
+		<script>
+			function loadProfile(){
+				$("#content").load("/profile.html");
+			}
+		</script>
+
 </head>
 <body>
 
@@ -46,7 +52,7 @@
     	<div class="sidebar-wrapper">
             <div class="logo">
                 <a href="http://www.creative-tim.com" class="simple-text">
-                    Creative Tim
+                    Zile
                 </a>
             </div>
 
@@ -58,21 +64,21 @@
                     </a>
                 </li>
                 <li>
-                    <a href="user.html">
+                    <a onclick="loadProfile()">
                         <i class="pe-7s-user"></i>
-                        <p>User Profile</p>
+                        <p>School Profile</p>
                     </a>
                 </li>
                 <li>
                     <a href="table.html">
                         <i class="pe-7s-note2"></i>
-                        <p>Table List</p>
+                        <p>Devices List</p>
                     </a>
                 </li>
                 <li>
                     <a href="typography.html">
                         <i class="pe-7s-news-paper"></i>
-                        <p>Typography</p>
+                        <p>Add a device</p>
                     </a>
                 </li>
                 <li>
@@ -84,7 +90,7 @@
                 <li>
                     <a href="maps.html">
                         <i class="pe-7s-map-marker"></i>
-                        <p>Maps</p>
+                        <p>Map</p>
                     </a>
                 </li>
                 <li>
@@ -175,7 +181,7 @@
         </nav>
 
 
-        <div class="content">
+        <div id="content" class="content">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-4">
