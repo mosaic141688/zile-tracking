@@ -6,10 +6,10 @@ app.use(express.static('static'));
 
 var routes = [];
 
-io.on("connecton",function(socket){
+io.on("connection",function(socket){
   console.log("Device Connected");
 })
 
-app.listen(process.env.NODE_PORT || 3000, process.env.NODE_IP || 'localhost', function () {
+http.listen(process.env.NODE_PORT || 3000, process.env.NODE_IP || 'localhost',function () {
   console.log(`Application worker ${process.pid} started...`);
 });
