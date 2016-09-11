@@ -15,7 +15,7 @@ io.on("connection",function(socket){
   });
 })
 
-app.get("locs",function(req,res) {
+app.get("/locs",function(req,res) {
   db.getLocations((dat)=>res.send(dat));
 })
 
