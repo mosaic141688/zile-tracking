@@ -208,19 +208,22 @@
 
 
 var plotData= [];
-
-$.get("/locs",function(data){
-	data.forEach(dt,function(){
-		plotData.add({lat:dt.lat,lng:dt.lng});
+$().ready(function(){
+	$.get("/locs",function(data){
+		data.forEach(function(dt){
+			plotData.add({lat:dt.lat,lng:dt.lng});
+		});
+		var flightPath = new google.maps.Polyline({
+			path: plotData,
+			geodesic: true,
+			strokeColor: '#FF0000',
+			strokeOpacity: 1.0,
+			strokeWeight: 2
+		});
 	});
-	var flightPath = new google.maps.Polyline({
-		path: plotData,
-		geodesic: true,
-		strokeColor: '#FF0000',
-		strokeOpacity: 1.0,
-		strokeWeight: 2
-	});
+	//	demo.initGoogleMaps();
 });
+
 
 flightPath.setMap(map);
             }
