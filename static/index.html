@@ -213,6 +213,10 @@ var flightPath = new google.maps.Polyline({
 	strokeWeight: 2
 });
 
+$.get("/locs",function(data){
+	console.log(data);
+});
+
 flightPath.setMap(map);
             }
 
