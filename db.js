@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-
+var url="mongodb://$OPENSHIFT_MONGODB_DB_HOST:$OPENSHIFT_MONGODB_DB_PORT";
 // if OPENSHIFT env variables are present, use the available connection info:
 if (process.env.OPENSHIFT_MONGODB_DB_URL) {
    url = process.env.OPENSHIFT_MONGODB_DB_URL +
