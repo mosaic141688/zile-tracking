@@ -8,6 +8,7 @@ var routes = [];
 
 io.on("connection",function(socket){
   console.log("Device Connected");
+  socket.on("coords",(cd)=>console.log(cd));
 })
 
 http.listen(process.env.NODE_PORT || 3000, process.env.NODE_IP || 'localhost',function () {
