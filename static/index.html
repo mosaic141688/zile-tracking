@@ -205,22 +205,25 @@
 	{lat: -18.142, lng: 178.431},
 	{lat: -27.467, lng: 153.027}
 ];
-var flightPath = new google.maps.Polyline({
-	path: flightPlanCoordinates,
-	geodesic: true,
-	strokeColor: '#00FF00',
-	strokeOpacity: 1.0,
-	strokeWeight: 2
-});
 
-(function(){
-	$.get("/locs",function(data){
-	console.log(data);
+
+var plotData= [];
+
+$.get("/locs",function(data){
+	data.forEach(dt,function(){
+		plotData.add({lat:dt.lat,lng:dt.lng});
+	});
+	var flightPath = new google.maps.Polyline({
+		path: plotData,
+		geodesic: true,
+		strokeColor: '#FF0000',
+		strokeOpacity: 1.0,
+		strokeWeight: 2
+	});
 });
 
 flightPath.setMap(map);
-            }}
-					)()
+            }
 
 
           </script>
