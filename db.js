@@ -51,6 +51,6 @@ var getDevices=function(callback){
 }
 exports.getDevices=getDevices;
 var getLocations = function(callback){
-  Location.find({},'lat,lng',(err,res)=>err?console.log(err):callback(res));
+  Location.find({},'lat lng',(err,res)=>err?console.log(err):callback(res));
 }
 exports.getLocations=getLocations;
