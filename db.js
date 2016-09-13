@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var url="mongodb://$OPENSHIFT_MONGODB_DB_HOST:$OPENSHIFT_MONGODB_DB_PORT";
+var url="mongodb://localhost/zile:27017";
 // if OPENSHIFT env variables are present, use the available connection info:
 if (process.env.OPENSHIFT_MONGODB_DB_URL) {
    url = process.env.OPENSHIFT_MONGODB_DB_URL +
@@ -26,9 +26,38 @@ var LocationSchema = new mongoose.Schema({
    lng:Number
 })
 
+var DeviceSchema = mongoose.Schema({
+  _id:String,
+  location:{lat:Number,lng:Number},
+  trail:[{lat:Number,lng:Number,time:{type:Date,default:Date.now()}}]
+});
 
+var Device = mongoose.model("device",DeviceSchema);
+
+var updateDevice = function(dev,callback){
+  Device.findOne({_id:dev.device},function(err,res){
+    if(err)
+    console.log(err);
+    else {
+      if(res){
+        console.log("Device Exists");
+        Device.update({_id:dev.device},{'location.lat':dev.lat,'location.lng':dev.lng,$push:{trail:{lat:dev.lat,lng:dev.lng}}},(er,re)=>er?console.log(er):console.log(re));
+      }
+      else{
+        Device.create({_id:dev.device,location:{lat:dev.lat,lng:dev.lng}});
+      }
+    }
+  })
+}
+
+var allDevices=function(callback){
+  Device.find({},(err,res)=>err?console.log(err):callback(res));
+}
+
+exports.allDevices=allDevices;
+
+exports.updateDevice=updateDevice;
 var Location = mongoose.model("user",LocationSchema);
-
 var save=function(loc,callback){
   Location.create(loc,(err,res)=>err?console.log(err):callback(res));
 }

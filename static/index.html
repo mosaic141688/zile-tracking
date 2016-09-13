@@ -10,8 +10,6 @@
 
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
-
-
     <!-- Bootstrap core CSS     -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
 
@@ -59,7 +57,7 @@
 
             <ul class="nav">
                 <li class="active">
-                    <a href="index.html">
+                    <a href="/index.html">
                         <i class="pe-7s-graph"></i>
                         <p>Dashboard</p>
                     </a>
@@ -210,18 +208,25 @@
 
 var plotData= [];
 $().ready(function(){
-	$.get("/locs",function(data){
+	$.get("/alldevices",function(data){
 		data.forEach(function(dt){
-			plotData.push({lat:dt.lat,lng:dt.lng});
+			var flightPath = new google.maps.Polyline({
+				path: dt.trail,
+				geodesic: true,
+				strokeColor: '#FF0000',
+				strokeOpacity: 1.0,
+				strokeWeight: 2
+			});
+			flightPath.setMap(map);
 		});
-		var flightPath = new google.maps.Polyline({
+	/*	var flightPath = new google.maps.Polyline({
 			path: plotData,
 			geodesic: true,
 			strokeColor: '#FF0000',
 			strokeOpacity: 1.0,
 			strokeWeight: 2
 		});
-		flightPath.setMap(map);
+		flightPath.setMap(map);*/
 	});
 	//	demo.initGoogleMaps();
 });
