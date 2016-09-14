@@ -209,6 +209,9 @@ $().ready(function(){
 				strokeWeight: 2
 			});
 			dt.trail.forEach(function(vertex) {
+				if ((vertex.lat==dt.location.lat)&&(vertex.lng==dt.location.lng)) {
+					return;
+				}
 				var inf = new google.maps.InfoWindow();
 				inf.setContent(vertex.time);
 				var vtx =  new google.maps.LatLng(vertex.lat, vertex.lng)
