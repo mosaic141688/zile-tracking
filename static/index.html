@@ -197,15 +197,6 @@
                 center: {lat:-26.145031666666668, lng: 30.997361666666666},
                 zoom: 10
               });
-
-							var flightPlanCoordinates = [
-	{lat: 37.772, lng: -122.214},
-	{lat: 21.291, lng: -157.821},
-	{lat: -18.142, lng: 178.431},
-	{lat: -27.467, lng: 153.027}
-];
-
-
 var plotData= [];
 $().ready(function(){
 	$.get("/alldevices",function(data){
@@ -217,8 +208,26 @@ $().ready(function(){
 				strokeOpacity: 1.0,
 				strokeWeight: 2
 			});
+			dt.trail.forEach(function(vertex) {
+				var inf = new google.maps.InfoWindow();
+				inf.setContent(vertex.time);
+				var vtx =  new google.maps.LatLng(vertex.lat, vertex.lng)
+				inf.setPosition(vtx);
+				inf.open(map);
+			})
 			flightPath.setMap(map);
+			  var myLatlng = new google.maps.LatLng(dt.location.lat, dt.location.lng);
+			var currentLocation = new google.maps.Marker({
+				position: myLatlng,
+				title:"Last seen here!"
+			}
+			);
+			currentLocation.setMap(map);
+		console.log(dt);
 		});
+
+
+
 	/*	var flightPath = new google.maps.Polyline({
 			path: plotData,
 			geodesic: true,
