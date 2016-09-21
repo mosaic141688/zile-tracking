@@ -4,7 +4,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 var db = require('./db');
-app.use(express.static('static'));
+app.use(express.static('ui'));
 
 var routes = [];
 

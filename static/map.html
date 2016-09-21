@@ -1,13 +1,72 @@
+<div>
+<style>
+#map{
+  background: #FF0000;
+  width: 5000px;
+  height: 5000px;
+}
+</style>
 <div id="map"></div>
 <script>
   var map;
   function initMap() {
     console.log("initMap");
     map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: -34.397, lng: 150.644},
-      zoom: 8
+      center: {lat:-26.145031666666668, lng: 30.997361666666666},
+      zoom: 10
     });
+var plotData= [];
+$().ready(function(){
+$.get("/alldevices",function(data){
+data.forEach(function(dt){
+var flightPath = new google.maps.Polyline({
+path: dt.trail,
+geodesic: true,
+strokeColor: '#FF0000',
+strokeOpacity: 1.0,
+strokeWeight: 2
+});
+dt.trail.forEach(function(vertex) {
+if ((vertex.lat==dt.location.lat)&&(vertex.lng==dt.location.lng)) {
+return;
+}
+var inf = new google.maps.InfoWindow();
+inf.setContent(vertex.time);
+var vtx =  new google.maps.LatLng(vertex.lat, vertex.lng)
+inf.setPosition(vtx);
+inf.open(map);
+})
+flightPath.setMap(map);
+var myLatlng = new google.maps.LatLng(dt.location.lat, dt.location.lng);
+var currentLocation = new google.maps.Marker({
+position: myLatlng,
+title:"Last seen here!"
+}
+);
+currentLocation.setMap(map);
+console.log(dt);
+});
+
+
+
+/*	var flightPath = new google.maps.Polyline({
+path: plotData,
+geodesic: true,
+strokeColor: '#FF0000',
+strokeOpacity: 1.0,
+strokeWeight: 2
+});
+flightPath.setMap(map);*/
+});
+//	demo.initGoogleMaps();
+});
+
+
+
   }
+
+
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDNUh9drF-hwfKtl_An8yDXjgzRWAIQEQ&callback=initMap"
 async defer></script>
+</div>

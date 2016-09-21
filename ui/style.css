@@ -1,0 +1,27 @@
+main{
+  padding: 10px;
+}
+
+body{
+  background:#666;
+}
+
+main{
+  background:#ababab;
+}
+
+main div .card .card-block ul li{
+  display: block;
+  width: 100%;
+}
+
+.nav-btn{
+  width:100%;
+}
+
+html, body, #map {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+  }
