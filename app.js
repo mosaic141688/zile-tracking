@@ -12,6 +12,12 @@ io.on("connection",function(socket){
   console.log("Device Connected");
   socket.on("coords",function(cd){
     db.updateDevice(cd,(es)=>console.log(es));
+    db.deviceRegistered(cd,(reg)=>socket.emit("registered",reg));
+  });
+  socket.on("signup",(_school)=>{
+    db.registerSchool(_school,(res)=>{
+      socket.emit("signed",res);
+    });
   });
 })
 

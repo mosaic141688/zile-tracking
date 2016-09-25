@@ -26,14 +26,68 @@ var LocationSchema = new mongoose.Schema({
    lng:Number
 })
 
+var SchoolSchema = new mongoose.Schema({
+   name:String,
+   email:String,
+   address:String,
+   tel:String,
+   province:String,
+   password:String,
+   devices:[{type:mongoose.Schema.Types.ObjectId,ref:"device"}]
+})
+
+
+
 var DeviceSchema = mongoose.Schema({
   _id:String,
+  registered:{type:Boolean, default:false},
   location:{lat:Number,lng:Number},
   trail:[{lat:Number,lng:Number,time:{type:Date,default:Date.now()}}]
 });
 
+
+
 var Device = mongoose.model("device",DeviceSchema);
 
+var School = mongoose.model("school",SchoolSchema);
+exports.deviceRegistered = function(dev,callback){
+  Device.findOne({_id:dev},(err,res)=>err?console.log(err):callback(res.registered));
+}
+
+var registerDevice = function(dev,sch,callback){
+  Device.findOne({_id:dev},(err,res)=>{
+    if(err){
+      console.log(err);
+    }
+else if (res) {
+  School.update({_id:sch},{$push:dev});
+  res.registered=true;
+  res.save();
+}
+  })
+}
+
+var getSchool = function(sch, callback){
+  School.findOne({_id:sch}).populate("devices").exec((err,res)=>err?console.log(err):callback(res));
+}
+
+var registerSchool=function(sch,callback){
+  School.findOne({email:sch.email},function(err,res){
+    if(err){
+      console.log(err);
+    }
+    else {
+      if (res) {
+        callback(res)
+      }
+      else{
+        School.create(sch,(er,re)=>er?console.log(er):callback(re));
+      }
+    }
+  })
+}
+
+exports.registerSchool = registerSchool;
 var updateDevice = function(dev,callback){
   Device.findOne({_id:dev.device},function(err,res){
     if(err)

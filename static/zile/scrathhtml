@@ -1,0 +1,16 @@
+<app-drawer opened>
+  <div style="height: 100%; overflow: auto;">
+    <ul>
+      <li>
+        Home
+      </li>
+      <li>
+        Devices List
+      </li>
+      <li>
+        Register Device
+      </li>
+      <li>Profile</li>
+    </ul>
+  </div>
+</app-drawer>

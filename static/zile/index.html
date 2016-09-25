@@ -1,0 +1,84 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>zile-element</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../assets/js/jquery-1.10.2.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+    </script>
+    <script src="../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="app-layout/app-scroll-effects/effects/waterfall.html">
+    <link rel="import" href="../bower_components/iron-component-page/iron-component-page.html">
+    <link rel="import" href="../bower_components/app-layout/app-layout.html">
+    <link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+    <link rel="import" href="../bower_components/iron-icons/hardware-icons.html">
+    <link rel="import" href="../bower_components/paper-item/paper-item.html">
+      <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+        <link rel="import" href="../bower_components/iron-component-page/iron-component-page.html">
+    <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+    <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+      <style>
+      app-header {
+background-color: #263238;
+color: #ffffff;
+--app-header-background-rear-layer: {
+  /* The header is blue when condensed */
+  background-color: blue;
+};
+}
+
+app-drawer{
+    color: #263238;
+}
+
+.paper-item{
+  color: #263238;
+  background:
+}
+
+li{
+  display:block;
+  padding: 20px;
+}
+      </style>
+  </head>
+  <body>
+    <app-header-layout fullbleed>
+      <app-header fixed condenses effects="waterfall">
+        <app-toolbar>
+          <paper-icon-button icon="menu" id="toggle"></paper-icon-button>
+          <div main-title>App name</div>
+        </app-toolbar>
+      </app-header>
+      <div div="content">
+        Loading .....
+      </div>
+    </app-header-layout>
+    <app-drawer opened>
+      <div style="height: 100%; overflow: auto; background-color:#616161">
+        <style is="custom-style" include="paper-item-shared-styles">
+        </style>
+        <paper-listbox style=" background-color:#616161 color:blue">
+          <button onclick="$('#content').load('/map.html')" class="paper-item"  style="--paper-item{ background: #000;}"><paper-icon-button icon="home"></paper-icon-button>Home</button>
+          <button class="paper-item" role="option"><paper-icon-button icon="list"></paper-icon-button>Device List</button>
+          <button class="paper-item" role="option"><paper-icon-button icon="store"></paper-icon-button>Business Profile</button>
+          <button class="paper-item" role="option"><paper-icon-button icon="hardware:smartphone"></paper-icon-button>Register Device</button>
+        </paper-listbox>
+      </div>
+    </app-drawer>
+  </body>
+  <script>
+  var drawer = document.querySelector('app-drawer');
+  document.querySelector('paper-icon-button').addEventListener('tap', function() {
+    drawer.toggle();
+  });
+
+  var pages = document.querySelector('iron-pages');
+ pages.addEventListener('click', function(e) {
+   pages.selectNext();
+ });
+  </script>
+</html>

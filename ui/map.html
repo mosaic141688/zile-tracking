@@ -11,7 +11,7 @@ var plotData= [];
 $().ready(function(){
 $.get("/alldevices",function(data){
 data.forEach(function(dt){
-var flightPath = new google.maps.Polyline({
+/*var flightPath = new google.maps.Polyline({
 path: dt.trail,
 geodesic: true,
 strokeColor: '#FF0000',
@@ -28,7 +28,7 @@ var vtx =  new google.maps.LatLng(vertex.lat, vertex.lng)
 inf.setPosition(vtx);
 inf.open(map);
 })
-flightPath.setMap(map);
+flightPath.setMap(map);*/
 var myLatlng = new google.maps.LatLng(dt.location.lat, dt.location.lng);
 var currentLocation = new google.maps.Marker({
 position: myLatlng,

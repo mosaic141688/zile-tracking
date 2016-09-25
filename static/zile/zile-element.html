@@ -1,0 +1,34 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+`zile-element`
+
+
+@demo demo/index.html 
+-->
+
+<dom-module id="zile-element">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]</h2>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'zile-element',
+
+      properties: {
+        prop1: {
+          type: String,
+          value: 'zile-element',
+        },
+      },
+
+    });
+  </script>
+</dom-module>
