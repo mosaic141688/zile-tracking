@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-    <title>Material Design Bootstrap</title>
+    <title>My Zile</title>
 
     <script type="text/javascript" src="./node_modules/mdbootstrap/js/jquery-2.2.3.js">
 
@@ -70,15 +70,20 @@ function loadVue() {
  })
 }
 
+function logout(){
+   window.localStorage.clear();
+   window.school=null;
+   $('#overlay').load('/signup.html');
+   $('#overlay').show("slow");
+}
+
  $("document").ready(function () {
     $("#content").load("/map.html");
-
-
     (function() {
-      var sch=window.localStorage.getItem("school");
+      window.school=JSON.parse(window.localStorage.getItem("school"));
     //  var _pass = window.localStorage.getItem("pass");
   //    console.log(_pass);
-      sch?$("#overlay").hide("slow"):$('#overlay').load('/signup.html');
+      window.school?$("#overlay").hide("slow"):$('#overlay').load('/signup.html');
     })();
 
 
@@ -102,18 +107,22 @@ function loadVue() {
 
  function loadMap(){
      $("#content").load("/map.html");
+     $(".card-title").html("Maps");
  }
 
  function loadDeviceList(){
     $("#content").load("/devices.html");
+         $(".card-title").html("Registered Devices");
  }
 
  function loadDeviceReg(){
     $("#content").load("dev-reg.html");
+       $(".card-title").html("Register A Device to School");
  }
 
  function loadLostDevices(){
     $("#content").load("lost-dev.html");
+         $(".card-title").html("List Of Lost Devices");
  }
 
      </script>
@@ -138,7 +147,6 @@ Loading.....
       </button>
 
       <div class="container">
-
           <!--Collapse content-->
           <div class="collapse navbar-toggleable-xs" id="collapseEx2">
               <!--Navbar Brand-->
@@ -160,7 +168,7 @@ Loading.....
               </ul>
               <!--Search form-->
               <form class="form-inline">
-                <div class="nav-btn btn btn-default">
+                <div class="nav-btn btn btn-default" onclick="logout()">
                   Logout
                 </div>
               </form>

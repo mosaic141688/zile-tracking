@@ -1,7 +1,12 @@
 
 <!--Form without header-->
 <script type="text/javascript">
-  
+  var registerDevice=function(){
+    window.socket.emit("reg-device",{school:window.school,dev:$("#form3").val()});
+    console.log(JSON.stringify(window.school));
+  }
+
+
 </script>
 <div class="card">
     <div class="card-block">
@@ -13,7 +18,6 @@
         <!--Body-->
         <p>After Installing the app on a new dvice, a notification will appear that will show the device ID, please copy that ID to the field below</p>
         <br>
-
         <!--Body-->
         <div class="md-form">
             <i class="fa fa-tablet prefix"></i>
@@ -21,9 +25,8 @@
             <label for="form3">Device ID</label>
         </div>
         <div class="text-xs-center">
-            <button class="btn btn-deep-orange">Send</button>
+            <button class="btn btn-deep-orange" onclick="registerDevice()">Send</button>
         </div>
-
     </div>
 </div>
 <!--/Form without header-->

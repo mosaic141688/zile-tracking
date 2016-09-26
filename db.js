@@ -33,7 +33,7 @@ var SchoolSchema = new mongoose.Schema({
    tel:String,
    province:String,
    password:String,
-   devices:[{type:mongoose.Schema.Types.ObjectId,ref:"device"}]
+   devices:[{type:String,ref:"device"}]
 })
 
 
@@ -60,12 +60,17 @@ var registerDevice = function(dev,sch,callback){
       console.log(err);
     }
 else if (res) {
-  School.update({_id:sch},{$push:dev});
+  School.update({_id:mongoose.Types.ObjectId(sch)},{$push:{devices:dev}},(er,re)=>er?console.log(er):callback(re));
   res.registered=true;
   res.save();
 }
+else{
+  callback("0000");
+}
   })
 }
+
+exports.registerDevice=registerDevice;
 
 var getSchool = function(sch, callback){
   School.findOne({_id:sch}).populate("devices").exec((err,res)=>err?console.log(err):callback(res));
@@ -139,6 +144,9 @@ var getLocations = function(callback){
 
 var getAllLocations = function(callback){
   Location.find({},(err,res)=>err?console.log(err):callback(res));
+}
+exports.getSchools=function(query,callack){
+  School.find(query).populate('devices').exec((err,res)=>err?console.log(err):callack(res));
 }
 exports.getAllLocations=getAllLocations;
 exports.getLocations=getLocations;

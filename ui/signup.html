@@ -36,9 +36,9 @@ function signup(){
   }
   window.socket.emit("signup",school);
   window.socket.on("signed",(data)=>{
-    window.school=data;
-       window.localStorage.setItem("school",data);
-    $("#overlay").hide("slow");
+  window.school=data;
+  window.localStorage.setItem("school",JSON.stringify(data));
+  $("#overlay").hide("slow");
   });
 }
 

@@ -19,6 +19,11 @@ io.on("connection",function(socket){
       socket.emit("signed",res);
     });
   });
+
+  socket.on("reg-device",(params)=>{
+    console.log(JSON.stringify(params));
+    db.registerDevice(params.dev,params.school._id,(res)=>console.log(res))
+  })
 })
 
 app.get("/alldevices",(req,res)=>db.allDevices((dat)=>res.send(dat)));
