@@ -11,7 +11,7 @@ var connect = function () {
    mongoose.connect(url);
 };
 connect();
-
+exports._ID = mongoose.Types.ObjectId;
 var db = mongoose.connection;
 
 db.on('error', function(error){
@@ -50,8 +50,9 @@ var DeviceSchema = mongoose.Schema({
 var Device = mongoose.model("device",DeviceSchema);
 
 var School = mongoose.model("school",SchoolSchema);
+
 exports.deviceRegistered = function(dev,callback){
-  Device.findOne({_id:dev},(err,res)=>err?console.log(err):callback(res.registered));
+  Device.findOne({_id:dev.device},(err,res)=>err?console.log(err):callback(res.registered));
 }
 
 var registerDevice = function(dev,sch,callback){
@@ -93,6 +94,7 @@ var registerSchool=function(sch,callback){
 }
 
 exports.registerSchool = registerSchool;
+
 var updateDevice = function(dev,callback){
   Device.findOne({_id:dev.device},function(err,res){
     if(err)
@@ -140,6 +142,10 @@ var getDevices=function(callback){
 exports.getDevices=getDevices;
 var getLocations = function(callback){
   Location.find({},'lat lng',(err,res)=>err?console.log(err):callback(res));
+}
+
+exports.getDevice = function(_dev_id,callback){
+    Device.find({_id:_dev_id},(err,res)=>err?console.log(err):callback(res));
 }
 
 var getAllLocations = function(callback){

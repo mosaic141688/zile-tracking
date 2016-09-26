@@ -20,6 +20,21 @@ io.on("connection",function(socket){
     });
   });
 
+  socket.on("get-device",(_dev_id)=>{
+    db.getDevice(_dev_id,(res)=>{
+      socket.emit("got-device",res);
+    })
+  })
+
+
+  socket.on("get-school",(_school_id)=>{
+    console.log(_school_id);
+    db.getSchools({_id:db._ID(_school_id)},(res)=>{
+      console.log(res);
+      socket.emit("got-school",res);
+    });
+  });
+
   socket.on("reg-device",(params)=>{
     console.log(JSON.stringify(params));
     db.registerDevice(params.dev,params.school._id,(res)=>console.log(res))
@@ -27,6 +42,9 @@ io.on("connection",function(socket){
 })
 
 app.get("/alldevices",(req,res)=>db.allDevices((dat)=>res.send(dat)));
+
+
+app.get("/device",(req,res)=>db.allDevices((dat)=>res.send(dat)));
 
 app.post("/locs",function(req,res) {
   db.getLocations((dat)=>res.send(dat));
