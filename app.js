@@ -1,7 +1,10 @@
+
 var express = require('express')
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var bodyParser = require('body-parser')
+app.use(bodyParser.urlencoded({ extended: true }));
 
 var db = require('./db');
 app.use(express.static('ui'));
@@ -29,10 +32,6 @@ io.on("connection",function(socket){
 
   socket.on("get-school",(_school_id)=>{
     console.log(_school_id);
-    db.getSchools({_id:db._ID(_school_id)},(res)=>{
-      console.log(res);
-      socket.emit("got-school",res);
-    });
   });
 
   socket.on("reg-device",(params)=>{
@@ -44,8 +43,18 @@ io.on("connection",function(socket){
 app.get("/alldevices",(req,res)=>db.allDevices((dat)=>res.send(dat)));
 
 
-app.get("/device",(req,res)=>db.allDevices((dat)=>res.send(dat)));
+app.post("/devices",(req,res)=>{
+  console.log(req.body);
 
+});
+
+app.post("/school",(req,resp)=>db.getSchools({_id:db._ID(req.body._id)},(res)=>resp.send(res)));
+app.post("/reportlost",(req,resp)=>db.setLost(req.body.dev_id,(res)=>resp.send(res)));
+app.post("/recover",(req,resp)=>db.recover(req.body.dev_id,(res)=>resp.send(res)));
+app.post("/signup",(req,resp)=>db.registerSchool(_school,(res)=>resp.send(res)));
+app.post("/device",(req,resp)=>db.getDevice(req.body.dev_id,(res)=>resp.send(res)));
+app.post("/regdevice",(req,resp)=>db.registerDevice(req.body.dev_id,req.body.school_id,(res)=>resp.send(res)));
+//app.post("/lostDevices",(req,resp)=>db.)
 app.post("/locs",function(req,res) {
   db.getLocations((dat)=>res.send(dat));
 })

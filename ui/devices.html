@@ -13,16 +13,21 @@
                departments:[]
            },
            created:function () {
-              window.socket.on("got-school",(_sch)=>{
-                this.devices=_sch[0].devices;
-                console.log(_sch[0]);
+              $.post("/school",{_id:window.school._id},(data)=>{
+                //this.devices=data[0].devices;
+                this.devices=[];
+                data[0].devices.forEach((_dev)=>_dev.lost?null:this.devices.push(_dev));
+                console.log(data);
               })
            },
            methods:{
              viewDevice:function(_dev_id){
                window.selectedDevice=_dev_id;
                $("#content").load("device-map.html")
-             }
+             },
+             reportDevice:function(_dev_id){
+               $.post("/reportlost",{dev_id:_dev_id})
+             },
            }
        });
    })()
@@ -39,8 +44,8 @@
           <h4 class="card-title">Last Seen at </h4>
           <p class="card-text">Queen's Gate, Mbabane, Hhohho, Swaziland</p>
           <a class="btn btn-default" v-on:click="viewDevice(device._id)">View On Map</a>
-          <a class="btn btn-warning">Report Lost</a>
-          <a class="btn btn-danger">Remove</a>
+          <a class="btn btn-warning" v-on:click="reportDevice(device._id)">Report Lost</a>
+          <a class="btn btn-danger" v-on:click="removeDevice(device._id)">Remove</a>
       </div>
       <div class="card-footer text-muted default-color-dark white-text">
           <p>Online</p>

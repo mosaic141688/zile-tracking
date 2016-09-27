@@ -40,6 +40,7 @@ var SchoolSchema = new mongoose.Schema({
 
 var DeviceSchema = mongoose.Schema({
   _id:String,
+  lost:{type:Boolean,default:false},
   registered:{type:Boolean, default:false},
   location:{lat:Number,lng:Number},
   trail:[{lat:Number,lng:Number,time:{type:Date,default:Date.now()}}]
@@ -146,6 +147,18 @@ var getLocations = function(callback){
 
 exports.getDevice = function(_dev_id,callback){
     Device.find({_id:_dev_id},(err,res)=>err?console.log(err):callback(res));
+}
+
+exports.removeDevice=function(_dev_id,_sch,callback){
+  School.update({_id:mongoose.Types.ObjectId(_sch)},{$pull:{devices:_dev_id}},(err,res)=>err?console.log(err):callback(res));
+}
+
+exports.setLost=function(_dev_id,callback){
+  Device.update({_id:_dev_id},{lost:true},(err,res)=>err?console.log(err):callback(res));
+}
+
+exports.recover = function(_dev_id,callback){
+  Device.update({_id:_dev_id},{lost:false},(err,res)=>err?console.log(err):callback(res));
 }
 
 var getAllLocations = function(callback){

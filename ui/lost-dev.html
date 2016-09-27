@@ -1,34 +1,52 @@
+<script type="text/javascript">
+  (function(){
+    console.log("Loading devices");
+    window.socket.emit("get-school",window.school._id);
+  }());
 
-<!--Panel-->
-<div class="card text-xs-center">
-    <div class="card-header default-color-dark white-text">
-        Device Id : 12553837537353
-    </div>
-    <div class="card-block">
-        <h4 class="card-title">Last Seen at </h4>
-        <p class="card-text">Queen's Gate, Mbabane, Hhohho, Swaziland</p>
-        <a class="btn btn-default">View On Map</a>
-        <a class="btn btn-warning">Report Recovered</a>
-        <a class="btn btn-danger">Forget</a>
-    </div>
-    <div class="card-footer text-muted default-color-dark white-text">
-        <p>Online</p>
-    </div>
-</div>
+  //Vue from down here
+  (function () {
+       new Vue({
+           el: "#device-list",
+           data: {
+               devices:[],
+               departments:[]
+           },
+           created:function () {
+              $.post("/school",{_id:window.school._id},(data)=>{
+              //  this.devices=data[0].devices;
+              this.devices=[];
+              data[0].devices.forEach((_dev)=>_dev.lost?this.devices.push(_dev):null);
+                console.log(data);
+              })
+           },
+           methods:{
+             viewDevice:function(_dev_id){
+               window.selectedDevice=_dev_id;
+               $("#content").load("device-map.html")
+             }
+           }
+       });
+   })()
 
+</script>
 <!--Panel-->
-<div class="card text-xs-center">
-    <div class="card-header default-color-dark white-text">
-        Device Id : 12553837537353
-    </div>
-    <div class="card-block">
-        <h4 class="card-title">Last Seen at </h4>
-        <p class="card-text">Queen's Gate, Mbabane, Hhohho, Swaziland</p>
-        <a class="btn btn-default">View On Map</a>
-        <a class="btn btn-warning">Report Recovered</a>
-        <a class="btn btn-danger">Forget</a>
-    </div>
-    <div class="card-footer text-muted default-color-dark white-text">
-        <p>Online</p>
-    </div>
+
+<div class="" id="device-list" v-for="device in devices" >
+  <div class="card text-xs-center">
+      <div class="card-header default-color-dark white-text">
+          Device Id : {{device._id}}
+      </div>
+      <div class="card-block">
+          <h4 class="card-title">Last Seen at </h4>
+          <p class="card-text">Queen's Gate, Mbabane, Hhohho, Swaziland</p>
+          <a class="btn btn-default" v-on:click="viewDevice(device._id)">View On Map</a>
+          <a class="btn btn-warning">Recover</a>
+          <a class="btn btn-danger">Forget</a>
+      </div>
+      <div class="card-footer text-muted default-color-dark white-text">
+          <p>Online</p>
+      </div>
+  </div>
 </div>
+<!--/.Panel-->

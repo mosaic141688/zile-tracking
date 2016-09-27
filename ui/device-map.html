@@ -5,14 +5,14 @@
     console.log("initMap");
     map = new google.maps.Map(document.getElementById('map'), {
       center: {lat:-26.145031666666668, lng: 30.997361666666666},
-      zoom: 20,
-      mapTypeId: 'hybrid'
+      zoom: 20
     });
 var plotData= [];
 $().ready(function(){
-$.get("/alldevices",function(data){
+window.socket.emit("get-device",window.selectedDevice);
+window.socket.on("got-device",function(data){
 data.forEach(function(dt){
-/*var flightPath = new google.maps.Polyline({
+var flightPath = new google.maps.Polyline({
 path: dt.trail,
 geodesic: true,
 strokeColor: '#FF0000',
@@ -29,7 +29,7 @@ var vtx =  new google.maps.LatLng(vertex.lat, vertex.lng)
 inf.setPosition(vtx);
 inf.open(map);
 })
-flightPath.setMap(map);*/
+flightPath.setMap(map);
 var myLatlng = new google.maps.LatLng(dt.location.lat, dt.location.lng);
 var currentLocation = new google.maps.Marker({
 position: myLatlng,

@@ -10,6 +10,7 @@
   "author": "Ionut-Cristian Florescu <ionut.florescu@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.15.2",
     "bootstrap-material-design": "^0.5.10",
     "express": "^4.14.0",
     "mongoose": "^4.6.0",

@@ -34,11 +34,10 @@ function signup(){
     alert("Passwords Dont Mathc");
     return;
   }
-  window.socket.emit("signup",school);
-  window.socket.on("signed",(data)=>{
-  window.school=data;
-  window.localStorage.setItem("school",JSON.stringify(data));
-  $("#overlay").hide("slow");
+  $.post("/signup",school,(data)=>{
+    window.school=data;
+    window.localStorage.setItem("school",JSON.stringify(data));
+    $("#overlay").hide("slow");
   });
 }
 
