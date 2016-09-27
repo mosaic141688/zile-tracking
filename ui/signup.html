@@ -34,7 +34,7 @@ function signup(){
     alert("Passwords Dont Mathc");
     return;
   }
-  $.post("/signup",school,(data)=>{
+  $.post("/signup",{_school:school},(data)=>{
     window.school=data;
     window.localStorage.setItem("school",JSON.stringify(data));
     $("#overlay").hide("slow");
