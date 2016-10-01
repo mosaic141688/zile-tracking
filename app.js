@@ -13,6 +13,13 @@ var routes = [];
 
 io.on("connection",function(socket){
   console.log("Device Connected");
+  socket.on("dev-status",(cd)=>{
+      console.log("Reg Query:"+cd);
+    db.deviceRegistered(cd,(reg)=>{
+    console.log("Reg Query:"+cd);
+    socket.emit("registered",reg.registered)
+  })
+})
   socket.on("coords",function(cd){
     db.updateDevice(cd,(es)=>console.log(es));
     db.deviceRegistered(cd,(reg)=>socket.emit("registered",reg));
@@ -39,16 +46,13 @@ io.on("connection",function(socket){
     db.registerDevice(params.dev,params.school._id,(res)=>console.log(res))
   })
 })
-
 app.get("/alldevices",(req,res)=>db.allDevices((dat)=>res.send(dat)));
-
-
 app.post("/devices",(req,res)=>{
   console.log(req.body);
-
 });
-
-app.post("/school",(req,resp)=>db.getSchools({_id:db._ID(req.body._id)},(res)=>resp.send(res)));
+app.post("/school",(req,resp)=>db.getSchools({_id:db._ID(req.body._id)},(res)=>{
+  resp.send(res)
+}));
 app.post("/reportlost",(req,resp)=>db.setLost(req.body.dev_id,(res)=>resp.send(res)));
 app.post("/recover",(req,resp)=>db.recover(req.body.dev_id,(res)=>resp.send(res)));
 app.post("/signup",(req,resp)=>db.registerSchool(req.body._school,(res)=>resp.send(res)));
@@ -58,7 +62,7 @@ app.post("/regdevice",(req,resp)=>db.registerDevice(req.body.dev_id,req.body.sch
 app.post("/locs",function(req,res) {
   db.getLocations((dat)=>res.send(dat));
 })
-
+app.post("/removeDevice",(req,resp)=>db.removeDevice(req.body.dev_id,req.body.school,(res)=>resp.send(res)));
 app.get("/locs",function(req,res) {
   db.getAllLocations((dat)=>res.send(dat));
 })

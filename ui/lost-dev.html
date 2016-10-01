@@ -24,6 +24,10 @@
              viewDevice:function(_dev_id){
                window.selectedDevice=_dev_id;
                $("#content").load("device-map.html")
+             },
+             recoverDevice:function(_dev_id){
+               window.selectedDevice=_dev_id;
+               $.post('/recover',{dev_id:_dev_id},(res)=>$("#content").load("/lost-dev.html"))
              }
            }
        });
@@ -41,7 +45,7 @@
           <h4 class="card-title">Last Seen at </h4>
           <p class="card-text">Queen's Gate, Mbabane, Hhohho, Swaziland</p>
           <a class="btn btn-default" v-on:click="viewDevice(device._id)">View On Map</a>
-          <a class="btn btn-warning">Recover</a>
+          <a class="btn btn-warning" v-on:click="recoverDevice(device._id)">Recover</a>
           <a class="btn btn-danger">Forget</a>
       </div>
       <div class="card-footer text-muted default-color-dark white-text">

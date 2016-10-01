@@ -53,7 +53,7 @@ var Device = mongoose.model("device",DeviceSchema);
 var School = mongoose.model("school",SchoolSchema);
 
 exports.deviceRegistered = function(dev,callback){
-  Device.findOne({_id:dev.device},(err,res)=>err?console.log(err):callback(res.registered));
+  Device.findOne({_id:dev},(err,res)=>err?console.log(err):callback(res));
 }
 
 var registerDevice = function(dev,sch,callback){
@@ -62,6 +62,10 @@ var registerDevice = function(dev,sch,callback){
       console.log(err);
     }
 else if (res) {
+  if(res.registered){
+    callback("1111");
+    return;
+  }
   School.update({_id:mongoose.Types.ObjectId(sch)},{$push:{devices:dev}},(er,re)=>er?console.log(er):callback(re));
   res.registered=true;
   res.save();
@@ -151,6 +155,11 @@ exports.getDevice = function(_dev_id,callback){
 
 exports.removeDevice=function(_dev_id,_sch,callback){
   School.update({_id:mongoose.Types.ObjectId(_sch)},{$pull:{devices:_dev_id}},(err,res)=>err?console.log(err):callback(res));
+  Device.update({_id:_dev_id},{registered:false});
+}
+
+exports.resetRegistration=function (_dev_id,callback) {
+    Device.update({_id:_dev_id},{registered:false},(err,res)=>err?console.log(err):callback(res));
 }
 
 exports.setLost=function(_dev_id,callback){

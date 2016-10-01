@@ -28,6 +28,9 @@
              reportDevice:function(_dev_id){
                $.post("/reportlost",{dev_id:_dev_id})
              },
+             removeDevice:function(_dev_id){
+               $.post("/removeDevice",{dev_id:_dev_id,school:window.school._id})
+             }
            }
        });
    })()

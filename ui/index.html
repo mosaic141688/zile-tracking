@@ -125,6 +125,65 @@ function logout(){
          $(".card-title").html("List Of Lost Devices");
  }
 
+ (function() {
+   var quotes =["It is impossible for a man to learn what he thinks he already knows. \n Epictetus",
+"Have you ever been at sea in a dense fog, when it seemed as if a tangible white darkness shut you in and the great ship, tense and anxious, groped her way toward the shore with plummet and sounding-line, and you waited with beating heart for something to happen? I was like that ship before my education began, only I was without compass or sounding line, and no way of knowing how near the harbor was. “Light! Give me light!” was the wordless cry of my soul, and the light of love shone on me in that very hour. \n Helen Keller",
+"If the only tool you have is a hammer, you tend to see every problem as a nail. \n Abraham Maslow",
+"You can teach a student a lesson for a day; but if you can teach him to learn by creating curiosity, he will continue the learning process as long as he lives. \n Clay P. Bedford",
+"Aim for success, not perfection. Never give up your right to be wrong, because then you will lose the ability to learn new things and move forward with your life. Remember that fear always lurks behind perfectionism. \n David M. Burns",
+"A teacher affects eternity; he can never tell where his influence stops. \n Henry B Adams",
+"Keep away from people who try to belittle your ambitions. Small people always do that, but the really great make you feel that you, too, can become great. \n Mark Twain",
+"The first problem for all of us, men and women, is not to learn, but to unlearn. \n Gloria Steinem",
+"Children have never been very good at listening to their elders, but they have never failed to imitate them. \n James Baldwin",
+"Education is a progressive discovery of our own ignorance. Will Durant",
+"The difference between school and life? In school, you’re taught a lesson and then given a test. In life, you’re given a test that teaches you a lesson. \n Tom Bodett",
+"Tell me and I’ll forget; show me and I may remember; involve me and I’ll understand. \n Chinese proverb",
+"If someone is going down the wrong road, he doesn’t need motivation to speed him up. What he needs is education to turn him around. \n Jim Rohn",
+"People learn something every day, and a lot of times it’s that what they learned the day before was wrong. \n Bill Vaughan",
+"1.Education cost money, but then so does ignorance. \n Claus Moser",
+"2.What sculpture is to a block of marble \n education is to the human soul. \n Joseph Addison",
+"3.Education makes a people easy to lead \n but difficult to drive: easy to govern, but impossible to enslave. \n Peter Brougham",
+"4.Do not train children to learning by force and harshness, but direct them to it by what amuses their minds, so that you may be better able to discover with accuracy the peculiar bent of the genius of each. \n Plato",
+"5.It is in fact a part of the function of education to help us escape, not from our own time — for we are bound by that — but from the intellectual and emotional limitations of our time. \n T.S. Eliot",
+"6.If people did not do silly things, nothing intelligent would ever get done. \n Ludwig Wittgenstein",
+"7.The beautiful thing about learning is that no one can take it away from you. \n B.B. King",
+"A child miseducated is a child lost. \n John F. Kennedy",
+"8.A good teacher must be able to put himself in the place of those who find learning hard.",
+"9.Eliphas Levi \n A liberal education is at the heart of a civil society, and at the heart of a liberal education is the act of teaching.",
+"10.A. Bartlett Giamatti \n An educational system isn’t worth a great deal if it teaches young people how to make a living but doesn’t teach them how to make a life.",
+"11.Author Unknown \n All the world is a laboratory to the inquiring mind.",
+"12.Martin H. Fischer \n An investment in knowledge pays the best dividends.",
+"13.Benjamin Franklin \n Around here, we don’t look backwards for very long… We keep moving forward, opening up new doors and doing new things because we’re curious… and curiosity keeps leading us down new paths.",
+"14.Walt Disney \n Before any great things are accomplished, a memorable change must be made in the system of education…to raise the lower ranks of society nearer to the higher.",
+"15.John Adams \n Better than a thousand days of diligent study is one day with a great teacher.",
+"16.Japanese Proverb \n Children have to be educated, but they have also to be left to educate themselves.",
+"17.Ernest Dimnet \n Children must be taught how to think, not what to think.",
+"18.Margaret Mead \n Do not confine your children to your own learning, for they were born in another time.",
+"19.Chinese Proverb\n Do you know the secret of the true scholar? In every man there is something wherein I may learn of him; and in that I am his pupil.",
+"20.Ralph Waldo Emerson\n Don’t just teach your kids to read, teach them to question what they read. Teach them to question everything.",
+"21.George Carlin \n Education aims to give you a boost up the ladder of knowledge. Too often, it just gives you a cramp on one of its rungs.",
+"22.Martin H. Fischer \n Education costs money, but then so does ignorance. \n23.Claus Moser"]
+  var i =0;
+
+   setInterval(()=>{
+     $("#qimg").animate({
+   opacity: '0.5',
+   background:"#ff0000",
+   height: '150px',
+   width: '150px'
+});
+
+$("#qimg").animate({
+opacity: '1',
+background:"#ff0000",
+height: '300px',
+width: '300px'
+});
+
+$('.quotes').html(i<quotes.length?"\""+quotes[i++]+"\"":"Please Check Your Internet Connection");
+    },6000);
+ })();
+
      </script>
 
 </head>
@@ -134,7 +193,15 @@ function logout(){
 
     <!-- Start your project here-->
 <div id="overlay">
-Loading.....
+<div id="ziload">
+
+  <div id="loadimg">
+    <img src="zile.jpg" class="img-rounded" alt="Cinque Terre" width="300" height="300" id="qimg">
+    <div class="quotes">
+
+    </div>
+  </div>
+</div>
 </div>
 
 <header>

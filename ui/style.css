@@ -39,3 +39,16 @@ html, body, #map {
   .form-horizontal{
     background: #fff;
   }
+
+  #ziload{
+    width:100%;
+    height:100%;
+    text-align: center;
+  }
+
+  #loadimg{
+    position: fixed;
+    width: 30%;
+    left:30%;
+    top:30%;
+  }
