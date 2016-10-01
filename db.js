@@ -1,3 +1,4 @@
+s
 var mongoose = require('mongoose');
 var url="mongodb://localhost/zile:27017";
 // if OPENSHIFT env variables are present, use the available connection info:
@@ -40,6 +41,7 @@ var SchoolSchema = new mongoose.Schema({
 
 var DeviceSchema = mongoose.Schema({
   _id:String,
+  status:{type:String,default:"offline"},
   lost:{type:Boolean,default:false},
   registered:{type:Boolean, default:false},
   location:{lat:Number,lng:Number},
@@ -51,6 +53,12 @@ var DeviceSchema = mongoose.Schema({
 var Device = mongoose.model("device",DeviceSchema);
 
 var School = mongoose.model("school",SchoolSchema);
+exports.setDeviceOnline=function(dev_id,callback){
+  Device.update({_id:dev_id},{status:"online"},(err,res)=>err?console.log(err):callback(res));
+}
+exports.setDeviceOffline = function(dev_id,callback){
+  Device.update({_id:dev_id},{status:"offline"},(err,res)=>err?console.log(err):callback(res))
+}
 
 exports.deviceRegistered = function(dev,callback){
   Device.findOne({_id:dev},(err,res)=>err?console.log(err):callback(res));
