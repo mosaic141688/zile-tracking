@@ -1,4 +1,4 @@
-s
+
 var mongoose = require('mongoose');
 var url="mongodb://localhost/zile:27017";
 // if OPENSHIFT env variables are present, use the available connection info:
