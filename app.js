@@ -18,6 +18,9 @@ io.on("connection",function(socket){
     console.log("Reg Query:"+cd);
     socket.emit("registered",reg.registered)
   })
+  socket.on("disconnectd",()=>{
+    db.setDeviceOffline(cd,()=>log('device'+cd+'went offline'));
+  })
 })
   socket.on("coords",function(cd){
     db.updateDevice(cd,(es)=>console.log(es));
