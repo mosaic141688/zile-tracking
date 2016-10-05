@@ -1,3 +1,5 @@
+<script type="text/javascript" src="./snackbarjs/dist/snackbar.min.js">
+</script>
 <script type="text/javascript">
 function loadVue() {
  new Vue({
@@ -30,22 +32,32 @@ function signup(){
     password:$("#password").val(),
     cpassword:$("#cpassword").val()
   }
+
+  if(!(school.email&&school.name&&school.address&&school.tel&&school.province&&school.password&&school.cpassword)) return showError("All Fields are Required");
+
   if(school.cpassword!=school.password){
-    alert("Passwords Dont Mathc");
-    return;
+    return showError("Passworrds dont match");
   }
+
+  if(school.email.indexOf("@")==-1) return showError("Your Email Should have a @ somewhere");
+  if(school.name.length<2) return showError("The School name is too short");
+  if(school.address.length<5) return showError("The Address is too short");
+  if(school.tel.leghth<7)return showError("The Telephone Number is Short");
+  if(school.province.length<3) return showError("The Name of the Province is too short");
+  if(school.password.length<3) return showError("The Password You entered is too short\n Short Passwords are week and insecure");
+  showLoading();
   $.post("/signup",{_school:school},(data)=>{
     window.school=data;
     window.localStorage.setItem("school",JSON.stringify(data));
     $("#overlay").hide("slow");
+    hidePopup();
   });
 }
 
+
+
 </script>
-
-
-
-
+<div class="">
 <div class="row">
   <div class="col-md-4"></div>
 <form class="form-horizontal col-md-4">
@@ -108,4 +120,6 @@ function signup(){
   </fieldset>
 </form>
 <div class="col-md-4"></div>
+</div>
+
 </div>

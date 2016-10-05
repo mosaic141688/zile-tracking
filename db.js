@@ -11,6 +11,7 @@ if (process.env.OPENSHIFT_MONGODB_DB_URL) {
 var connect = function () {
    mongoose.connect(url);
 };
+
 connect();
 exports._ID = mongoose.Types.ObjectId;
 var db = mongoose.connection;
@@ -85,6 +86,15 @@ else{
 }
 
 exports.registerDevice=registerDevice;
+
+var getSchools = function(callback){
+  School.find({},(err,res)=>err?console.log(err):callback(res));
+}
+
+var getDeviceIds = function(callback){
+  Device.find({},'_id',(err,res)=>err?console.log(err):callback(res));
+}
+
 
 var getSchool = function(sch, callback){
   School.findOne({_id:sch}).populate("devices").exec((err,res)=>err?console.log(err):callback(res));

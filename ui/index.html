@@ -8,11 +8,13 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
     <title>My Zile</title>
-
-    <script type="text/javascript" src="./node_modules/mdbootstrap/js/jquery-2.2.3.js">
-
+    <script type="text/javascript" src="./node_modules/arrive/src/arrive.js">
     </script>
 
+    <script type="text/javascript" src="./node_modules/mdbootstrap/js/jquery-2.2.3.js">
+    </script>
+    <script type="text/javascript" src="./snackbarjs/dist/snackbar.min.js">
+    </script>
     <link rel="stylesheet" href="./style.css" media="screen" title="no title">
 
     <!-- Font Awesome -->
@@ -86,12 +88,13 @@ function logout(){
       window.school?$("#overlay").hide("slow"):$('#overlay').load('/signup.html');
     })();
 
-
     console.log("DOcument Loaded");
 
 
     $("#loginbtn").click(()=>{
-    socket.emit("login",{uname:$("#user-name").val(),pass:$("#password").val()})});
+      showLoading();
+    //socket.emit("login",{uname:$("#user-name").val(),pass:$("#password").val()})
+  });
 
     socket.on("login-error",function(le){
       document.getElementById("error-box").innerHTML=le;
@@ -124,6 +127,36 @@ function logout(){
     $("#content").load("lost-dev.html");
          $(".card-title").html("List Of Lost Devices");
  }
+
+ function showLoading(){
+    $(".float").html('<img src="./ripple.svg" alt="" />');
+    $(".popup").show("slow");
+ }
+
+ function hidePopup(){
+   $(".popup").hide("slow");
+ }
+
+
+ function showDialog(text){
+    $(".float").html('<div class="card"> '+text+' </div>');
+    $(".popup").show("slow");
+ }
+
+
+
+  function showError(text){
+    var ctext =  '<div class="card error-card">\
+   '+text+' \
+   <div class="err-cancel" onclick="hidePopup()">Cancel</div> \
+    </div>';
+     $(".float").html(ctext);
+     $(".popup").show("fast");
+  }
+
+
+
+
 
  (function() {
    var quotes =["It is impossible for a man to learn what he thinks he already knows. \n Epictetus",
@@ -192,9 +225,19 @@ $('.quotes').html(i<quotes.length?"\""+quotes[i++]+"\"":"Please Check Your Inter
 
 
     <!-- Start your project here-->
+    <div class="popup row">
+      <div class="col-md-4">
+
+      </div>
+      <div class="float col-md-4 gears">
+
+      </div>
+      <div class="col-md-4">
+
+      </div>
+    </div>
 <div id="overlay">
 <div id="ziload">
-
   <div id="loadimg">
     <img src="zile.jpg" class="img-rounded" alt="Cinque Terre" width="300" height="300" id="qimg">
     <div class="quotes">

@@ -52,3 +52,37 @@ html, body, #map {
     left:30%;
     top:30%;
   }
+
+  .popup{
+    position: fixed;
+    top:0;
+    display: none;
+    left:0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    z-index: 4;
+    background: rgba(200, 200, 200, 0.5);
+  }
+
+  .popup-content{
+    background: rgba(255, 255, 255,1);
+    text-align: center;
+  }
+
+  .error-card{
+    padding:40px;
+  }
+
+  .err-cancel:hover{
+    color:#fe0000;
+    cursor: pointer;
+  }
+  .popup-content .card-block{
+    text-align: center;
+  }
+
+  .gears{
+    position:fixed;
+    top:50%;
+  }
