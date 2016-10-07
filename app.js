@@ -55,9 +55,11 @@ app.post("/devices",(req,res)=>{
 app.post("/school",(req,resp)=>db.getSchools({_id:db._ID(req.body._id)},(res)=>{
   resp.send(res)
 }));
+app.post("/schools",(req,resp)=>db.getSchools({},(res)=>resp.send(res)));
 app.post("/reportlost",(req,resp)=>db.setLost(req.body.dev_id,(res)=>resp.send(res)));
 app.post("/recover",(req,resp)=>db.recover(req.body.dev_id,(res)=>resp.send(res)));
 app.post("/signup",(req,resp)=>db.registerSchool(req.body._school,(res)=>resp.send(res)));
+app.post("/login",(req,resp)=>dd.signinSchool(req.body._school,(res)=>resp.send(rse)));
 app.post("/device",(req,resp)=>db.getDevice(req.body.dev_id,(res)=>resp.send(res)));
 app.post("/regdevice",(req,resp)=>db.registerDevice(req.body.dev_id,req.body.school_id,(res)=>resp.send(res)));
 //app.post("/lostDevices",(req,resp)=>db.)

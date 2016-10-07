@@ -172,8 +172,8 @@ exports.getDevice = function(_dev_id,callback){
 }
 
 exports.removeDevice=function(_dev_id,_sch,callback){
+    Device.update({_id:_dev_id},{registered:false});
   School.update({_id:mongoose.Types.ObjectId(_sch)},{$pull:{devices:_dev_id}},(err,res)=>err?console.log(err):callback(res));
-  Device.update({_id:_dev_id},{registered:false});
 }
 
 exports.resetRegistration=function (_dev_id,callback) {

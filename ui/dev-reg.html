@@ -2,8 +2,20 @@
 <!--Form without header-->
 <script type="text/javascript">
   var registerDevice=function(){
-    window.socket.emit("reg-device",{school:window.school,dev:$("#form3").val()});
-    console.log(JSON.stringify(window.school));
+    //window.socket.emit("reg-device",{school:window.school,dev:$("#form3").val()});
+    //console.log(JSON.stringify(window.school));
+    showLoading();
+    $.post("/regdevice",{dev_id:$("#form3").val(),school_id:window.school._id},(res)=>{
+      console.log(res);
+      if (res=="1111") {
+        showError("The Device is Already registered");
+      }
+      else if (res=="0000") {
+          showError("The Device ID does not exist")
+      }else{
+              showError("Device Added Successfully");
+      }
+    });
   }
 
 
