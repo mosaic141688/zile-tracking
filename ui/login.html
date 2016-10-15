@@ -1,0 +1,88 @@
+<script type="text/javascript" src="./snackbarjs/dist/snackbar.min.js">
+</script>
+<script type="text/javascript">
+function loadVue() {
+ new Vue({
+   el: '#app',
+   data: {
+   },
+   created:function () {
+   },
+   methods:{
+     method1:function () {
+
+     }
+   },
+   computed:{
+     b:function () {
+       return this.method1();
+     }
+   }
+ })
+}
+
+
+function signup(){
+$("#overlay").load("/signup.html");
+}
+
+
+
+function login(){
+  var school = {
+    email:$("#inputEmail").val(),
+    password:$("#password").val(),
+  }
+
+  if(!(school.email&&school.password)) return showError("All Fields are Required");
+
+  if(school.email.indexOf("@")==-1) return showError("Your Email Should have a @ somewhere");
+  //if(school.password.length<3) return showError("The Password You entered is too short\n Short Passwords are week and insecure");
+  showLoading();
+  $.post("/login",school,(data)=>{
+    if(data.length<4) return showError("Email or Password is Incorrect");
+    window.school=data;
+    window.localStorage.setItem("school",JSON.stringify(data));
+    $("#overlay").hide("slow");
+    hidePopup();
+  });
+}
+
+
+</script>
+<div class="">
+<div class="row">
+  <div class="col-md-4"></div>
+<form class="form-horizontal col-md-4">
+  <fieldset>
+    <legend>School Signin</legend>
+    <div class="form-group">
+      <label for="inputEmail" class="col-md-2 control-label">Email</label>
+
+      <div class="col-md-10">
+        <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputPassword" class="col-md-2 control-label">Password</label>
+      <div class="col-md-10">
+        <input type="password" class="form-control" id="password" placeholder="Password">
+      </div>
+    </div>
+    <div class="form-footer row">
+      <div class="col-md-3 nav-btn btn btn-danger left">
+        Cancel
+      </div>
+      <div class="col-md-3 nav-btn btn btn-default left" onclick="login()" >
+        Login
+      </div>
+      <div class="col-md-3 nav-btn btn btn-default right" onclick="signup()">
+        Signup
+      </div>
+    </div>
+  </fieldset>
+</form>
+<div class="col-md-4"></div>
+</div>
+
+</div>

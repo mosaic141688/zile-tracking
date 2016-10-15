@@ -13,12 +13,21 @@
                departments:[]
            },
            created:function () {
-              $.post("/school",{_id:window.school._id},(data)=>{
-                //this.devices=data[0].devices;
-                this.devices=[];
-                data[0].devices.forEach((_dev)=>_dev.lost?null:this.devices.push(_dev));
-                console.log(data);
-              })
+             $.post("/school",{_id:window.school._id},(data)=>{
+               //this.devices=data[0].devices;
+               this.devices=[];
+               data[0].devices.forEach((_dev)=>_dev.lost?null:this.devices.push(_dev));
+               console.log(data);
+             });
+             setInterval(function(){
+               $.post("/school",{_id:window.school._id},(data)=>{
+                 //this.devices=data[0].devices;
+                 this.devices=[];
+                 data[0].devices.forEach((_dev)=>_dev.lost?null:this.devices.push(_dev));
+                 console.log(data);
+               })
+             }, 10000);
+
            },
            methods:{
              viewDevice:function(_dev_id){
@@ -26,7 +35,7 @@
                $("#content").load("device-map.html")
              },
              reportDevice:function(_dev_id){
-               $.post("/reportlost",{dev_id:_dev_id})
+               $.post("/reportlost",{dev_id:_dev_id},(res)=>$("#content").load("/devices.html"))
              },
              removeDevice:function(_dev_id){
                $.post("/removeDevice",{dev_id:_dev_id,school:window.school._id})
@@ -51,7 +60,7 @@
           <a class="btn btn-danger" v-on:click="removeDevice(device._id)">Remove</a>
       </div>
       <div class="card-footer text-muted default-color-dark white-text">
-          <p>Online</p>
+          <p>{{device.status}}</p>
       </div>
   </div>
 </div>

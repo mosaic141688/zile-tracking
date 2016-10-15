@@ -1,0 +1,72 @@
+Flutter crash report; please file at https://github.com/flutter/flutter/issues.
+
+## command
+
+flutter daemon
+
+## exception
+
+FileSystemException: writeFrom failed, path = '' (OS Error: Broken pipe, errno = 32)
+
+```
+dart:io                                                           _StdSink.writeln
+package:flutter_tools/executable.dart 111                         main.<async>.<fn>
+===== asynchronous gap ===========================
+dart:io                                                           _StdSink.writeln
+package:flutter_tools/executable.dart 111                         main.<async>.<fn>
+===== asynchronous gap ===========================
+dart:io                                                           _StdSink.writeln
+package:flutter_tools/executable.dart 111                         main.<async>.<fn>
+===== asynchronous gap ===========================
+dart:io                                                           _StdSink.writeln
+package:flutter_tools/src/base/logger.dart 69                     StdoutLogger.printStatus
+package:flutter_tools/src/globals.dart 31                         printStatus
+package:flutter_tools/src/commands/daemon.dart 48                 DaemonCommand.runInProject
+package:flutter_tools/src/runner/flutter_command.dart 192         FlutterCommand._run.<async>
+dart:async                                                        _SyncCompleter.complete
+package:flutter_tools/src/cache.dart 184                          Cache.updateAll.<async>
+===== asynchronous gap ===========================
+dart:async                                                        _asyncThenWrapperHelper
+package:flutter_tools/src/runner/flutter_command.dart             FlutterCommand._run
+package:flutter_tools/src/runner/flutter_command.dart 116         FlutterCommand.run
+package:args/command_runner.dart 177                              CommandRunner.runCommand.<fn>
+dart:async                                                        Future.Future.sync
+package:args/command_runner.dart 130                              CommandRunner.runCommand
+package:flutter_tools/src/runner/flutter_command_runner.dart 177  FlutterCommandRunner.runCommand.<async>
+dart:async                                                        _SyncCompleter.complete
+package:flutter_tools/src/cache.dart 71                           Cache.lock.<async>
+===== asynchronous gap ===========================
+dart:async                                                        _asyncThenWrapperHelper
+package:flutter_tools/src/runner/flutter_command_runner.dart      FlutterCommandRunner.runCommand
+package:args/command_runner.dart 104                              CommandRunner.run.<fn>
+dart:async                                                        Future.Future.sync
+package:args/command_runner.dart 104                              CommandRunner.run
+package:flutter_tools/src/runner/flutter_command_runner.dart 123  FlutterCommandRunner.run
+package:flutter_tools/executable.dart 94                          main.<async>.<fn>.<async>
+===== asynchronous gap ===========================
+package:stack_trace                                               Chain.capture
+package:flutter_tools/executable.dart 88                          main.<async>
+```
+
+## flutter doctor
+
+```
+[✓] Flutter (on Linux, channel master)
+    • Flutter at /home/mosaic/flutter
+    • Framework revision 0873f3e186 (4 weeks ago), 2016-09-15 23:32:51
+    • Engine revision e4121f80a9
+    • Tools Dart version 1.20.0-dev.1.0
+
+[-] Android toolchain - develop for Android devices (Android SDK 24.0.2)
+    • Android SDK at /home/mosaic/Android/Sdk
+    • Platform android-24, build-tools 24.0.2
+    x Android SDK file not found: /home/mosaic/Android/Sdk/platforms/android-24/android.jar.
+    • Try re-installing or updating your Android SDK.
+
+[✓] Atom - a lightweight development environment for Flutter
+    • flutter plugin version 0.2.5
+    • dartlang plugin version 0.6.39
+
+[✓] Connected devices
+    • None
+```

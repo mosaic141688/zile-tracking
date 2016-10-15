@@ -54,9 +54,7 @@ function signup(){
   });
 }
 
-function signin(){
-  $("#overlay").load("/login.html");
-}
+
 
 </script>
 <div class="">
@@ -64,7 +62,7 @@ function signin(){
   <div class="col-md-4"></div>
 <form class="form-horizontal col-md-4">
   <fieldset>
-    <legend>School Registration</legend>
+    <legend>School Signin</legend>
     <div class="form-group">
       <label for="inputEmail" class="col-md-2 control-label">Email</label>
 
@@ -73,46 +71,16 @@ function signin(){
       </div>
     </div>
     <div class="form-group">
-      <label for="inputSchoolName" class="col-md-2 control-label">School Name</label>
-      <div class="col-md-10">
-        <input type="text" class="form-control" id="inputSchoolName" placeholder="SchoolName">
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="address" class="col-md-2 control-label">Physical Address</label>
-      <div class="col-md-10">
-        <input type="text" class="form-control" id="address" placeholder="Physical Address">
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="telephone" class="col-md-2 control-label">Tel:</label>
-      <div class="col-md-10">
-        <input type="number" class="form-control" id="telephone" placeholder="Tel">
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="inputProvince" class="col-md-2 control-label">Province</label>
-      <div class="col-md-10">
-        <input type="text" class="form-control" id="province" placeholder="Province">
-      </div>
-    </div>
-    <div class="form-group">
       <label for="inputPassword" class="col-md-2 control-label">Password</label>
       <div class="col-md-10">
         <input type="password" class="form-control" id="password" placeholder="Password">
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="inputPassword" class="col-md-2 control-label">Confirm Password</label>
-      <div class="col-md-10">
-        <input type="password" class="form-control" id="cpassword" placeholder="Password">
       </div>
     </div>
     <div class="form-footer row">
       <div class="col-md-3 nav-btn btn btn-danger left">
         Cancel
       </div>
-      <div class="col-md-3 nav-btn btn btn-default left" onclick="signin()">
+      <div class="col-md-3 nav-btn btn btn-default left">
         Login
       </div>
       <div class="col-md-3 nav-btn btn btn-default right" onclick="signup()">

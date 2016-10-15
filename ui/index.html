@@ -82,6 +82,8 @@ function logout(){
  $("document").ready(function () {
     $("#content").load("/map.html");
     (function() {
+      console.log(JSON.stringify(window.localStorage.getItem("school")));
+      //window.localStorage.clear();
       window.school=JSON.parse(window.localStorage.getItem("school"));
     //  var _pass = window.localStorage.getItem("pass");
   //    console.log(_pass);
@@ -143,6 +145,11 @@ function logout(){
     $(".popup").show("slow");
  }
 
+ function showProfile(){
+   $("#content").load("profile.html");
+        $(".card-title").html("School Profile");
+ }
+
 
 
   function showError(text){
@@ -151,12 +158,8 @@ function logout(){
    <div class="err-cancel" onclick="hidePopup()">Cancel</div> \
     </div>';
      $(".float").html(ctext);
-     $(".popup").show("fast");
+     $(".popup").show("");
   }
-
-
-
-
 
  (function() {
    var quotes =["It is impossible for a man to learn what he thinks he already knows. \n Epictetus",
@@ -310,7 +313,7 @@ $('.quotes').html(i<quotes.length?"\""+quotes[i++]+"\"":"Please Check Your Inter
         <!-- Nav tabs -->
 <ul class="nav nav-tabs md-pills pills-default" role="tablist">
 <li onclick="loadMap()"><a class="nav-btn btn btn-default"><i class="fa fa-map left"></i>Map</a></li>
-<li><a class="nav-btn btn btn-default"><i class="fa fa-university left"></i>School Profile</a></li>
+<li onclick="showProfile()"><a class="nav-btn btn btn-default"><i class="fa fa-university left"></i>School Profile</a></li>
 <li  onclick="loadDeviceList()"><a class="nav-btn btn btn-default"><i class="fa fa-tablet left"></i>Device List</a></li>
 <li onclick="loadDeviceReg()"><a class="nav-btn btn btn-default"><i class="fa fa-tablet left"></i>Add a Device</a></li>
 <li  onclick="loadLostDevices()" ><a class="nav-btn btn btn-default"><i class="fa fa-tablet left"></i>Lost Devices</a></li>

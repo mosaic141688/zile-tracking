@@ -40,6 +40,8 @@ var SchoolSchema = new mongoose.Schema({
 
 
 
+
+
 var DeviceSchema = mongoose.Schema({
   _id:String,
   status:{type:String,default:"offline"},
@@ -65,6 +67,11 @@ exports.deviceRegistered = function(dev,callback){
   Device.findOne({_id:dev},(err,res)=>err?console.log(err):callback(res));
 }
 
+var signinSchool = function(email,password,callback){
+  School.findOne({email:email, password:password},(err,res)=>err?console.log(err):callback(res));
+}
+
+exports.signinSchool=signinSchool;
 var registerDevice = function(dev,sch,callback){
   Device.findOne({_id:dev},(err,res)=>{
     if(err){
@@ -137,6 +144,12 @@ var updateDevice = function(dev,callback){
 var allDevices=function(callback){
   Device.find({},(err,res)=>err?console.log(err):callback(res));
 }
+
+var schools = function(query,population,callback){
+  School.find(query).populate(population).exec((err,res)=>err?console.log(err):callback(res));
+}
+
+exports.schools=schools;
 
 exports.allDevices=allDevices;
 
