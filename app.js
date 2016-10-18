@@ -74,7 +74,6 @@ app.post("/removeDevice",(req,resp)=>db.removeDevice(req.body.dev_id,req.body.sc
 app.get("/locs",function(req,res) {
   db.getAllLocations((dat)=>res.send(dat));
 })
-
 http.listen(process.env.NODE_PORT || 3000, process.env.NODE_IP || "0.0.0.0",function () {
   console.log(`Application worker ${process.pid} started...`);
 });
