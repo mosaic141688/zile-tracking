@@ -50,8 +50,6 @@ io.on("connection",function(socket){
     db.registerDevice(params.dev,params.school._id,(res)=>console.log(res))
   })
 })
-
-
 app.get("/alldevices",(req,res)=>db.allDevices((dat)=>res.send(dat)));
 app.post("/devices",(req,res)=>{
   console.log(req.body);
