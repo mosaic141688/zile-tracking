@@ -1,0 +1,155 @@
+<script type="text/javascript" src="./snackbarjs/dist/snackbar.min.js">
+</script>
+<script type="text/javascript">
+function loadVue() {
+ new Vue({
+   el: '#app',
+   data: {
+   },
+   created:function () {
+   },
+   methods:{
+     method1:function () {
+
+     }
+   },
+   computed:{
+     b:function () {
+       return this.method1();
+     }
+   }
+ })
+}
+
+
+function signup(){
+  var school = {
+    email:$("#inputEmail").val(),
+    name:$("#inputSchoolName").val(),
+    address:$("#address").val(),
+    tel:$("#telephone").val(),
+    province:$("#province").val(),
+    password:$("#password").val(),
+    cpassword:$("#cpassword").val()
+  }
+
+  if(!(school.email&&school.name&&school.address&&school.tel&&school.province&&school.password&&school.cpassword)) return showError("All Fields are Required");
+
+  if(school.cpassword!=school.password){
+    return showError("Passworrds dont match");
+  }
+
+  if(school.email.indexOf("@")==-1) return showError("Your Email Should have a @ somewhere");
+  if(school.name.length<2) return showError("The School name is too short");
+  if(school.address.length<5) return showError("The Address is too short");
+  if(school.tel.leghth<7)return showError("The Telephone Number is Short");
+  if(school.province.length<3) return showError("The Name of the Province is too short");
+  if(school.password.length<3) return showError("The Password You entered is too short\n Short Passwords are week and insecure");
+  showLoading();
+  var signupRef = window.database().ref("schools");
+  var registered = false;
+  var newRegister = false;
+  signupRef.orderByChild("email").equalTo(school.email).on("child_added",(snap)=>{
+    console.log("Child Added");
+    registered = true;
+    console.log(snap.val())
+    console.log("Verify");
+  //  if(newRegister){
+      window.school=snap.val();
+        window.localStorage.setItem("school",JSON.stringify(snap.val()));
+  //  }
+  });
+
+  signupRef.once("value",(val)=>{
+    if(registered){
+      return showError("This School is registered, Please Login");
+    }
+    else{
+        var newSchool = signupRef.push();
+        newSchool.set(school);
+        newRegister=true;
+        console.log(val.val());
+        console.log("Register");
+    }
+
+  })
+  /*
+  $.post("/signup",{_school:school},(data)=>{
+    window.school=data;
+    window.localStorage.setItem("school",JSON.stringify(data));
+    $("#overlay").hide("slow");
+    hidePopup();
+  });*/
+}
+
+function signin(){
+  $("#overlay").load("/login.html");
+}
+
+</script>
+<div class="">
+<div class="row">
+  <div class="col-md-4"></div>
+<form class="form-horizontal col-md-4">
+  <fieldset>
+    <legend>School Registration</legend>
+    <div class="form-group">
+      <label for="inputEmail" class="col-md-2 control-label">Email</label>
+
+      <div class="col-md-10">
+        <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputSchoolName" class="col-md-2 control-label">School Name</label>
+      <div class="col-md-10">
+        <input type="text" class="form-control" id="inputSchoolName" placeholder="SchoolName">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="address" class="col-md-2 control-label">Physical Address</label>
+      <div class="col-md-10">
+        <input type="text" class="form-control" id="address" placeholder="Physical Address">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="telephone" class="col-md-2 control-label">Tel:</label>
+      <div class="col-md-10">
+        <input type="number" class="form-control" id="telephone" placeholder="Tel">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputProvince" class="col-md-2 control-label">Province</label>
+      <div class="col-md-10">
+        <input type="text" class="form-control" id="province" placeholder="Province">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputPassword" class="col-md-2 control-label">Password</label>
+      <div class="col-md-10">
+        <input type="password" class="form-control" id="password" placeholder="Password">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputPassword" class="col-md-2 control-label">Confirm Password</label>
+      <div class="col-md-10">
+        <input type="password" class="form-control" id="cpassword" placeholder="Password">
+      </div>
+    </div>
+    <div class="form-footer row">
+      <div class="col-md-3 nav-btn btn btn-danger left">
+        Cancel
+      </div>
+      <div class="col-md-3 nav-btn btn btn-default left" onclick="signin()">
+        Login
+      </div>
+      <div class="col-md-3 nav-btn btn btn-default right" onclick="signup()">
+        Signup
+      </div>
+    </div>
+  </fieldset>
+</form>
+<div class="col-md-4"></div>
+</div>
+
+</div>

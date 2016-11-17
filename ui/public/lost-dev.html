@@ -1,0 +1,154 @@
+<script type="text/javascript">
+  (function(){
+    console.log("Loading devices");
+  //  window.socket.emit("get-school",window.school._id);
+  }());
+
+  function geocodeLatLng() {
+    var geocoder = new google.maps.Geocoder;
+    var latlng = {lat: -26.328983333333333, lng:31.147751666666668};
+    geocoder.geocode({'location': latlng}, function(results, status) {
+      if (status === 'OK') {
+        if (results[0]) {
+            console.log(results[0]);
+        } else {
+          window.alert('No results found');
+        }
+      } else {
+        window.alert('Geocoder failed due to: ' + status);
+      }
+    });
+  }
+//  geocodeLatLng();
+
+  //Vue from down here
+  (function () {
+       new Vue({
+           el: "#device-list",
+           data: {
+               devices:[],
+               departments:[]
+           },
+           created:function () {
+             var self=this;
+             for(id in window.school){
+                var devRef=window.database().ref("devices");
+                 devRef.orderByChild("school").equalTo(id).on("child_added",(snap)=>{
+                   var dev = snap.val();
+                   dev._id=snap.key;
+                   $.get("https://maps.googleapis.com/maps/api/geocode/json?latlng="+dev.location.lat+","+dev.location.lng+"&key=AIzaSyCDNUh9drF-hwfKtl_An8yDXjgzRWAIQEQ",(res)=>{
+                     dev.address=res.results[0].formatted_address;
+                     if(!dev.loc)dev.loc=false;
+                     dev.lost?self.devices.push(dev):null;
+                 });
+
+                 })
+
+        /*          var devicesRef=window.database().ref("schools").child(id).child("devices");
+                  devicesRef.on("value",(devs)=>{
+                    _devs=devs.val();
+                    console.log(_devs);
+                    for(device in _devs){
+                      console.log(device);
+
+                      _device=_devs[device];
+                      _device._id=device;
+                      self.devices.push(_device);
+                      self.getDevice(_device._id);
+                    }
+                  })*/
+             }
+
+            /* $.post("/school",{_id:window.school._id},(data)=>{
+               //this.devices=data[0].devices;
+               this.devices=[];
+               data[0].devices.forEach((_dev)=>_dev.lost?null:this.devices.sspush(_dev));
+               console.log(data);
+             });*/
+            /* setInterval(function(){
+               $.post("/school",{_id:window.school._id},(data)=>{
+                 //this.devices=data[0].devices;
+                 this.devices=[];
+                 data[0].devices.forEach((_dev)=>_dev.lost?null:this.devices.push(_dev));
+                 console.log(data);
+               })
+             }, 10000);*/
+
+           },
+           methods:{
+             viewDevice:function(_dev_id){
+               window.selectedDevice=_dev_id;
+               $("#content").load("device-map.html")
+             },
+             getDevice:function(_dev_id){
+               var self=this;
+               var devRef= window.database().ref("devices").child(_dev_id);
+               devRef.on("value",(dv)=>{
+                   $.get("https://maps.googleapis.com/maps/api/geocode/json?latlng="+dv.val().location.lat+","+dv.val().location.lng+"&key=AIzaSyCDNUh9drF-hwfKtl_An8yDXjgzRWAIQEQ",(res)=>{
+                   //  console.log(res.results[0].formatted_address)
+                     //console.log(_devs[device]);
+                     var temp = [];
+                     self.devices.forEach((dev)=>{
+                       dev.address=dev._id==_dev_id?res.results[0].formatted_address:dev.address;
+                       if(dev.lost)temp.push(dev);
+                       console.log(dev);
+                     })
+                     self.devices=[];
+                     temp.forEach((tmp)=>{
+                       self.devices.push(tmp);
+                       console.log(tmp);
+                     })
+                   })
+               })
+             },
+             reportDevice:function(_dev_id){
+               //$.post("/reportlost",{dev_id:_dev_id},(res)=>$("#content").load("/devices.html"))
+               showLoading();
+               var devRev = window.database().ref("devices").child(_dev_id);
+                 devRev.once("value",(dev)=>{
+                   devRev.child("lost").set(null);
+                   showError("Device Lost");
+                 });
+             },
+             removeDevice:function(_dev_id){
+               showLoading();
+               var devRev = window.database().ref("devices").child(_dev_id);
+
+
+                 devRev.once("value",(dev)=>{
+                   devRev.child("student_name").set(null);
+                   devRev.child("student_id").set(null);
+                   devRev.child("school").set(null);
+                   showError("Device Removed Successfully");
+                 });
+
+               //$.post("/removeDevice",{dev_id:_dev_id,school:window.school._id})
+             }
+           }
+       });
+   })()
+
+</script>
+<!--Panel-->
+
+<div class="" id="device-list" v-for="device in devices" >
+  <div class="card text-xs-center">
+      <div class="card-header default-color-dark white-text">
+          Device Id : {{device._id}}
+      </div>
+      <div class="card-block">
+          <h4 class="card-title">Last Seen at  </h4>
+          <div v-show="device.loc">
+            {{new Date(device.loc.elapsedRealtimeNanos).toUTCString()}}
+          </div>
+          <p class="card-text">{{device.address}}</p>
+          <a class="btn btn-default" v-on:click="viewDevice(device._id)">View On Map</a>
+          <a class="btn btn-warning" v-on:click="reportDevice(device._id)">Recover</a>
+          <a class="btn btn-danger" v-on:click="removeDevice(device._id)">Remove</a>
+      </div>
+      <div class="card-footer text-muted default-color-dark white-text">
+          <p>{{device.status}}</p>
+      </div>
+  </div>
+</div>
+<!--/.Panel-->

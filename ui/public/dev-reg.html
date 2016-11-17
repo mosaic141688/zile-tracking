@@ -1,0 +1,65 @@
+
+<!--Form without header-->
+<script type="text/javascript">
+  var registerDevice=function(){
+    showLoading();
+    var devRev = window.database().ref("devices").child($("#form3").val());
+
+    for(id in window.school){
+      devRev.once("value",(dev)=>{
+        if(dev.val()==null) return showError("Device ID not Found");
+        if(dev.val().school) return showError("Device is Already registered");
+      //  var ref = window.database().ref("schools").child(id).child("devices").child($("#form3").val());
+        devRev.child("student_name").set($("#st_name").val());
+        devRev.child("student_id").set($("#st_id").val());
+        devRev.child("school").set(id);
+        showError("Device Added Successfully");
+      });
+    }
+  /*  $.post("/regdevice",{dev_id:$("#form3").val(),school_id:window.school._id},(res)=>{
+      console.log(res);
+      if (res=="1111") {
+        showError("The Device is Already registered");
+      }
+      else if (res=="0000") {
+          showError("The Device ID does not exist")
+      }else{
+              showError("Device Added Successfully");
+      }
+    });*/
+  }
+
+
+</script>
+<div class="card">
+    <div class="card-block">
+        <!--Header-->
+        <div class="text-xs-center">
+            <h3><i class="fa fa-pencil"></i> Register New Device:</h3>
+            <hr class="m-t-2 m-b-2">
+        </div>
+        <!--Body-->
+        <p>After Installing the app on a new dvice, a notification will appear that will show the device ID, please copy that ID to the field below</p>
+        <br>
+        <!--Body-->
+        <div class="md-form">
+            <i class="fa fa-tablet prefix"></i>
+            <input type="text" id="form3" class="form-control">
+            <label for="form3">Device ID</label>
+        </div>ss
+        <div class="md-form">
+            <i class="fa fa-user prefix"></i>
+            <input type="text" id="st_name" class="form-control">
+            <label for="form3">Student Name</label>
+        </div>
+        <div class="md-form">
+            <i class="fa fa-user prefix"></i>
+            <input type="text" id="st_id" class="form-control">
+            <label for="form3">Student ID</label>
+        </div>
+        <div class="text-xs-center">
+            <button class="btn btn-deep-orange" onclick="registerDevice()">Send</button>
+        </div>
+    </div>
+</div>
+<!--/Form without header-->

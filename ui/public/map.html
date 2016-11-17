@@ -1,0 +1,83 @@
+<div id="map" style="width: 100%; height: 100%; position: absolute; left:0; top:0;"></div>
+<script>
+
+  var triangleCoords = [];
+  var bermudaTriangle=null;
+     // Construct the polygon.
+function drawPolly(e){
+  triangleCoords.push({lat:e.latLng.lat(),lng:e.latLng.lng()});
+    if(bermudaTriangle!=null)bermudaTriangle.setMap(null);
+  bermudaTriangle = new google.maps.Polygon({
+    paths: triangleCoords,
+    strokeColor: '#FF0000',
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: '#FF0000',
+    fillOpacity: 0.1
+  });
+  console.log("Drawing bermuda");
+  bermudaTriangle.setMap(map);
+}
+  var map;
+  var premiseLatLang;
+  function setPremise(){
+    console.log('Set Premise');
+  google.maps.event.clearInstanceListeners(mapListener);
+  }
+var mapListener
+  function initMap() {
+    console.log("initMap");
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat:-26.145031666666668, lng: 30.997361666666666},
+      zoom: 14
+    });
+    window.map = map;
+var plotData= [];
+mapListener = map.addListener('click', (e)=>$("#fences").prop("checked")?drawPolly(e):console.log("Not Edditing Fence"));
+$().ready(function(){
+  console.log("MAP LOADED");
+var devicesRef=window.database().ref("devices");
+devicesRef.on("value",(_data)=>{
+  var data=_data.val();
+  window.devices = data;
+//  console.log(data);
+  for(var dt in data){
+  //  console.log(dt)
+  var myLatlng = new google.maps.LatLng(data[dt].location.lat, data[dt].location.lng);
+  map.panTo(myLatlng);
+  var currentLocation = new google.maps.Marker({
+  position: myLatlng,
+  title:"Last seen here!"
+  }
+  );
+  currentLocation.setMap(map);
+//  console.log(dt);
+};
+})
+
+
+/*$.get("/alldevices",function(data){
+data.forEach(function(dt){
+var myLatlng = new google.maps.LatLng(dt.location.lat, dt.location.lng);
+var currentLocation = new google.maps.Marker({
+position: myLatlng,
+title:"Last seen here!"
+}
+);
+currentLocation.setMap(map);
+console.log(dt);
+});
+});*/
+});
+
+
+
+  }
+
+
+
+
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDNUh9drF-hwfKtl_An8yDXjgzRWAIQEQ&callback=initMap"
+async defer></script>

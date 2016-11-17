@@ -7,6 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
+
+<script src="https://www.gstatic.com/firebasejs/3.5.1/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyC0CR9YjOJrC93vSNnFLjw-1dJ5D99RzkI",
+    authDomain: "zile-66c59.firebaseapp.com",
+    databaseURL: "https://zile-66c59.firebaseio.com",
+    storageBucket: "zile-66c59.appspot.com",
+    messagingSenderId: "606695466440"
+  };
+  firebase.initializeApp(config);
+</script>
+
     <title>My Zile</title>
     <script type="text/javascript" src="./node_modules/arrive/src/arrive.js">
     </script>
@@ -80,6 +94,8 @@ function logout(){
 }
 
  $("document").ready(function () {
+   var ref = firebase.database();
+   ref.ref("schools").on("value",(val)=>console.log(val.val()))
     $("#content").load("/map.html");
     (function() {
       console.log(JSON.stringify(window.localStorage.getItem("school")));
@@ -98,7 +114,7 @@ function logout(){
     //socket.emit("login",{uname:$("#user-name").val(),pass:$("#password").val()})
   });
 
-    socket.on("login-error",function(le){
+  /*  socket.on("login-error",function(le){
       document.getElementById("error-box").innerHTML=le;
     });
 
@@ -106,7 +122,7 @@ function logout(){
       window.user = _user;
     $("#loginbox").hide("slow");
 //    $("#app").show("slow");
- });
+ });*/
 
  });
 

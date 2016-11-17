@@ -1,0 +1,106 @@
+<div id="map" style="width: 100%; height: 100%; position: absolute; left:0; top:0;"></div>
+<script>
+  var map;
+  function initMap() {
+    console.log("initMap");
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat:-26.145031666666668, lng: 30.997361666666666},
+      zoom: 20,
+      mapTypeId: 'hybrid'
+    });
+var plotData= [];
+$().ready(function(){
+var deviceRef = window.database().ref("devices").child(window.selectedDevice);
+deviceRef.on("value",(snap)=>{
+  var dev = snap.val();
+  console.log(dev);
+
+  var trail=[];
+
+  for(var tr in dev.trail){
+    trail.push(dev.trail[tr]);
+  }
+
+
+  var flightPath = new google.maps.Polyline({
+  path: trail,
+  geodesic: true,
+  strokeColor: '#FF0000',
+  strokeOpacity: 1.0,
+  strokeWeight: 2
+  });
+/*  dt.trail.forEach(function(vertex) {
+  if ((vertex.lat==dt.location.lat)&&(vertex.lng==dt.location.lng)) {
+  return;
+
+  var inf = new google.maps.InfoWindow();
+  inf.setContent(vertex.time);
+  var vtx =  new google.maps.LatLng(vertex.lat, vertex.lng)
+  inf.setPosition(vtx);
+  inf.open(map);
+})*/
+  flightPath.setMap(map);
+  var myLatlng = new google.maps.LatLng(dev.location.lat, dev.location.lng);
+  var currentLocation = new google.maps.Marker({
+  position: myLatlng,
+  title:"Last seen here!"
+  }
+  );
+  currentLocation.setMap(map);
+//  console.log(dt);
+
+
+/*window.socket.emit("get-device",window.selectedDevice);
+window.socket.on("got-device",function(data){
+data.forEach(function(dt){
+var flightPath = new google.maps.Polyline({
+path: dt.trail,
+geodesic: true,
+strokeColor: '#FF0000',
+strokeOpacity: 1.0,
+strokeWeight: 2
+});
+dt.trail.forEach(function(vertex) {
+if ((vertex.lat==dt.location.lat)&&(vertex.lng==dt.location.lng)) {
+return;
+}
+var inf = new google.maps.InfoWindow();
+inf.setContent(vertex.time);
+var vtx =  new google.maps.LatLng(vertex.lat, vertex.lng)
+inf.setPosition(vtx);
+inf.open(map);
+})
+flightPath.setMap(map);
+var myLatlng = new google.maps.LatLng(dt.location.lat, dt.location.lng);
+var currentLocation = new google.maps.Marker({
+position: myLatlng,
+title:"Last seen here!"
+}
+);
+currentLocation.setMap(map);
+console.log(dt);
+});
+
+
+
+/*	var flightPath = new google.maps.Polyline({
+path: plotData,
+geodesic: true,
+strokeColor: '#FF0000',
+strokeOpacity: 1.0,
+strokeWeight: 2
+});
+flightPath.setMap(map);
+});*/
+//	demo.initGoogleMaps();
+});
+
+
+
+  });
+}
+
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDNUh9drF-hwfKtl_An8yDXjgzRWAIQEQ&callback=initMap"
+async defer></script>

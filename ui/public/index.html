@@ -1,0 +1,471 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+
+    <title>My Zile</title>
+    <script src="https://www.gstatic.com/firebasejs/3.5.1/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyC0CR9YjOJrC93vSNnFLjw-1dJ5D99RzkI",
+        authDomain: "zile-66c59.firebaseapp.com",
+        databaseURL: "https://zile-66c59.firebaseio.com",
+        storageBucket: "zile-66c59.appspot.com",
+        messagingSenderId: "606695466440"
+      };
+      firebase.initializeApp(config);
+      window.database = firebase.database;
+    </script>
+    <script type="text/javascript" src="./node_modules/arrive/src/arrive.js">
+    </script>
+
+    <script type="text/javascript" src="./node_modules/mdbootstrap/js/jquery-2.2.3.js">
+    </script>
+    <script type="text/javascript" src="./snackbarjs/dist/snackbar.min.js">
+    </script>
+    <link rel="stylesheet" href="./style.css" media="screen" title="no title">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+
+    <!-- Bootstrap core CSS -->
+    <link href="./node_modules/mdbootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Material Design Bootstrap -->
+    <link href="./node_modules/mdbootstrap/css/mdb.min.css" rel="stylesheet">
+        <script src="node_modules/socket.io-client/socket.io.js"></script>
+
+    <!-- Your custom styles (optional) -->
+    <link href="./node_modules/mdbootstrap/css/style.css" rel="stylesheet">
+    <script src="node_modules/vue/dist/vue.js"></script>
+     <base href="/">
+
+     <script type="text/javascript">
+     //window.socket = io();
+
+function loadVue() {
+ new Vue({
+   el: '#main-app',
+   data: {
+     message: 'Hello Vue.js!',
+     schools:[],
+     user:null
+   },
+   created:function () {
+     console.log("Hello World");
+     var schoolsRef = window.database().ref("schools");
+     schoolsRef.on("value",(snap)=>{
+       this.schools=[];
+       var _schools = snap.val();
+       for (var school in _schools) {
+         if (_schools.hasOwnProperty(school)) {
+           this.schools.push({id:school,data:_schools[school]});
+         }
+       }
+
+     })
+   },
+   methods:{
+     method1:function () {
+       return 5;
+     },
+     signout:function () {
+       console.log("signout");
+       $("#loginbox").show("slow");
+       $("#app").hide("slow");
+       this.user=null;
+       window.localStorage.clear();
+     },
+     selectSchool:function(sch){
+        console.log(sch.id);
+        window.selectedSchool=sch;
+        loadMap();
+        loadDeviceList();
+     }
+   },
+   computed:{
+     b:function () {
+       return this.method1();
+     }
+   }
+ })
+}
+
+
+
+
+function logout(){
+
+   window.localStorage.clear();
+   window.school=null;
+   $('#overlay').load('/signup.html');
+   $('#overlay').show("slow");
+}
+
+ $("document").ready(function () {
+   var ref = firebase.database();
+   loadVue();
+   ref.ref("schools").on("value",(val)=>{
+     window.school=val.val();
+    // $('#overlay').hide("slow");
+   })
+    $("#content").load("/map.html");
+    (function() {
+      console.log(JSON.stringify(window.localStorage.getItem("school")));
+      //window.localStorage.clear();
+      window.school=JSON.parse(window.localStorage.getItem("school"));
+    //  var _pass = window.localStorage.getItem("pass");
+  //    console.log(_pass);
+      window.school?$("#overlay").hide("slow"):$('#overlay').load('/signup.html');
+    })();
+
+    console.log("DOcument Loaded");
+
+
+    $("#loginbtn").click(()=>{
+      showLoading();
+    //socket.emit("login",{uname:$("#user-name").val(),pass:$("#password").val()})
+  });
+
+  /*  socket.on("login-error",function(le){
+      document.getElementById("error-box").innerHTML=le;
+    });
+
+    window.socket.on("auth",(_user)=> {
+      window.user = _user;
+    $("#loginbox").hide("slow");
+//    $("#app").show("slow");
+ });*/
+
+ });
+
+ function loadMap(){
+     $("#content").load("/map.html");
+     $(".card-title").html("Maps");
+ }
+
+ function loadDeviceList(){
+    $("#content").load("/dev-table.html");
+         $(".card-title").html("Registered Devices");
+ }
+
+ function loadDeviceReg(){
+    $("#content").load("dev-reg.html");
+       $(".card-title").html("Register A Device to School");
+ }
+
+ function loadLostDevices(){
+    $("#content").load("lost-dev.html");
+         $(".card-title").html("List Of Lost Devices");
+ }
+
+ function showLoading(){
+    $(".float").html('<img src="./ripple.svg" alt="" />');
+    $(".popup").show("slow");
+ }
+
+ function hidePopup(){
+   $(".popup").hide("slow");
+ }
+
+
+ function showDialog(text){
+    $(".float").html('<div class="card"> '+text+' </div>');
+    $(".popup").show("slow");
+ }
+
+ function showProfile(){
+   $("#content").load("profile.html");
+        $(".card-title").html("School Profile");
+ }
+
+
+
+  function showError(text){
+    var ctext =  '<div class="card error-card">\
+   '+text+' \
+   <div class="err-cancel" onclick="hidePopup()">Cancel</div> \
+    </div>';
+     $(".float").html(ctext);
+     $(".popup").show("");
+  }
+
+ (function() {
+   var quotes =["It is impossible for a man to learn what he thinks he already knows. \n Epictetus",
+"Have you ever been at sea in a dense fog, when it seemed as if a tangible white darkness shut you in and the great ship, tense and anxious, groped her way toward the shore with plummet and sounding-line, and you waited with beating heart for something to happen? I was like that ship before my education began, only I was without compass or sounding line, and no way of knowing how near the harbor was. “Light! Give me light!” was the wordless cry of my soul, and the light of love shone on me in that very hour. \n Helen Keller",
+"If the only tool you have is a hammer, you tend to see every problem as a nail. \n Abraham Maslow",
+"You can teach a student a lesson for a day; but if you can teach him to learn by creating curiosity, he will continue the learning process as long as he lives. \n Clay P. Bedford",
+"Aim for success, not perfection. Never give up your right to be wrong, because then you will lose the ability to learn new things and move forward with your life. Remember that fear always lurks behind perfectionism. \n David M. Burns",
+"A teacher affects eternity; he can never tell where his influence stops. \n Henry B Adams",
+"Keep away from people who try to belittle your ambitions. Small people always do that, but the really great make you feel that you, too, can become great. \n Mark Twain",
+"The first problem for all of us, men and women, is not to learn, but to unlearn. \n Gloria Steinem",
+"Children have never been very good at listening to their elders, but they have never failed to imitate them. \n James Baldwin",
+"Education is a progressive discovery of our own ignorance. Will Durant",
+"The difference between school and life? In school, you’re taught a lesson and then given a test. In life, you’re given a test that teaches you a lesson. \n Tom Bodett",
+"Tell me and I’ll forget; show me and I may remember; involve me and I’ll understand. \n Chinese proverb",
+"If someone is going down the wrong road, he doesn’t need motivation to speed him up. What he needs is education to turn him around. \n Jim Rohn",
+"People learn something every day, and a lot of times it’s that what they learned the day before was wrong. \n Bill Vaughan",
+"1.Education cost money, but then so does ignorance. \n Claus Moser",
+"2.What sculpture is to a block of marble \n education is to the human soul. \n Joseph Addison",
+"3.Education makes a people easy to lead \n but difficult to drive: easy to govern, but impossible to enslave. \n Peter Brougham",
+"4.Do not train children to learning by force and harshness, but direct them to it by what amuses their minds, so that you may be better able to discover with accuracy the peculiar bent of the genius of each. \n Plato",
+"5.It is in fact a part of the function of education to help us escape, not from our own time — for we are bound by that — but from the intellectual and emotional limitations of our time. \n T.S. Eliot",
+"6.If people did not do silly things, nothing intelligent would ever get done. \n Ludwig Wittgenstein",
+"7.The beautiful thing about learning is that no one can take it away from you. \n B.B. King",
+"A child miseducated is a child lost. \n John F. Kennedy",
+"8.A good teacher must be able to put himself in the place of those who find learning hard.",
+"9.Eliphas Levi \n A liberal education is at the heart of a civil society, and at the heart of a liberal education is the act of teaching.",
+"10.A. Bartlett Giamatti \n An educational system isn’t worth a great deal if it teaches young people how to make a living but doesn’t teach them how to make a life.",
+"11.Author Unknown \n All the world is a laboratory to the inquiring mind.",
+"12.Martin H. Fischer \n An investment in knowledge pays the best dividends.",
+"13.Benjamin Franklin \n Around here, we don’t look backwards for very long… We keep moving forward, opening up new doors and doing new things because we’re curious… and curiosity keeps leading us down new paths.",
+"14.Walt Disney \n Before any great things are accomplished, a memorable change must be made in the system of education…to raise the lower ranks of society nearer to the higher.",
+"15.John Adams \n Better than a thousand days of diligent study is one day with a great teacher.",
+"16.Japanese Proverb \n Children have to be educated, but they have also to be left to educate themselves.",
+"17.Ernest Dimnet \n Children must be taught how to think, not what to think.",
+"18.Margaret Mead \n Do not confine your children to your own learning, for they were born in another time.",
+"19.Chinese Proverb\n Do you know the secret of the true scholar? In every man there is something wherein I may learn of him; and in that I am his pupil.",
+"20.Ralph Waldo Emerson\n Don’t just teach your kids to read, teach them to question what they read. Teach them to question everything.",
+"21.George Carlin \n Education aims to give you a boost up the ladder of knowledge. Too often, it just gives you a cramp on one of its rungs.",
+"22.Martin H. Fischer \n Education costs money, but then so does ignorance. \n23.Claus Moser"]
+  var i =0;
+
+   setInterval(()=>{
+     $("#qimg").animate({
+   opacity: '0.5',
+   background:"#ff0000",
+   height: '150px',
+   width: '150px'
+});
+
+$("#qimg").animate({
+opacity: '1',
+background:"#ff0000",
+height: '300px',
+width: '300px'
+});
+
+ $("#devices").load("devices.html");
+
+$('.quotes').html(i<quotes.length?"\""+quotes[i++]+"\"":"Please Check Your Internet Connection");
+    },6000);
+ })();
+
+
+ function clearDevices(){
+   console.log(window.devices);
+   for (var i in window.devices) {
+     console.log(i);
+     window.database().ref("devices").child(i).child("trail").set(null);
+   }
+ }
+
+ function saveFence(){
+   window.database().ref("schools").child(window.selectedSchool.id).child("premise").set(triangleCoords);
+ }
+
+
+
+     </script>
+
+</head>
+
+<body id="main-app">
+
+    <!-- Start your project here-->
+    <div class="popup row">
+      <div class="col-md-4">
+
+      </div>
+      <div class="float col-md-4 gears">
+
+      </div>
+      <div class="col-md-4">
+
+      </div>
+    </div>
+<div id="overlay">
+<div id="ziload">
+  <div id="loadimg">
+    <img src="zile.jpg" class="img-rounded" alt="Cinque Terre" width="300" height="300" id="qimg">
+    <div class="quotes">
+
+    </div>
+  </div>
+</div>
+</div>
+
+<header>
+  <!--Navbar-->
+  <nav class="navbar navbar-dark bg-primary">
+
+      <!-- Collapse button-->
+      <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#collapseEx2">
+          <i class="fa fa-bars"></i>
+      </button>
+
+      <div class="container">
+          <!--Collapse content-->
+          <div class="collapse navbar-toggleable-xs" id="collapseEx2">
+              <!--Navbar Brand-->
+              <a class="navbar-brand" href="#">My Zile</a>
+              <!--Links-->
+              <ul class="nav navbar-nav">
+                  <li class="nav-item active">
+                      <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="#">Support</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="#">About</a>
+                  </li>
+
+                  <li class="nav-item">
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Schools
+                            <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                              <li v-for="school in schools"><a v-on:click="selectSchool(school)">{{school.data.name}}</a></li>
+                          </ul>
+                    </div>
+                  </li>
+              </ul>
+              <!--Search form-->
+              <form class="form-inline">
+                <div class="nav-btn btn btn-default" onclick="logout()">
+                  Logout
+                </div>
+              </form>
+          </div>
+          <!--/.Collapse content-->
+
+      </div>
+
+  </nav>
+  <!--/.Navbar-->
+</header>
+
+<main style="height: 100%;">
+
+<div class="row" style="height: 100%;">
+    <div class="col-md-5" style="height:100%;">
+<!--Card-->
+<div class="card" id="devices-card" style="height:50%;width:100%">
+
+    <!--Card image-->
+    <!--/.Card image-->
+
+    <!--Card content-->
+    <div id="devices" class="card-content">
+        <!--Title-->
+        <!-- Nav tabs -->
+        <!-- Nav tabs -->
+
+    </div>
+    <!--/.Card content-->
+
+</div>
+
+
+<div class="card" id="devices-card" style="height:40%">
+
+    <!--Card image-->
+    <!--/.Card image-->
+
+    <!--Card content-->
+    <div class="card-block">
+        <!--Title-->
+        <!-- Nav tabs -->
+        <!-- Nav tabs -->
+  <ul class="nav nav-tabs">
+      <li class="active"><a href="#">Home</a></li>
+      <li><a href="#">Menu 1</a></li>
+      <li><a href="#">Menu 2</a></li>
+      <li><a href="#">Menu 3</a></li>
+</ul>
+
+    </div>
+    <!--/.Card content-->
+
+</div>
+    </div>
+    <div class="col-md-7" style="height: 100%;">
+      <!--Card-->
+      <div class="card"  style="height: 60%;">
+
+          <div class="card-block"  style="height: 100%;">
+              <!--Title-->
+              <h4 class="card-title">Map</h4>
+              <div class="pull-left btn-group" id="controls" style="z-index:5">
+
+                  <div class="togglebutton pull-left" style="z-index:5">
+                      <label>
+                          Eddit GeoFence
+                        <input id="fences" type="checkbox" v-model="fences">
+                      </label>
+                  </div>
+                  <div class="btn btn-sm btn-primary" onclick="saveFence()" v-show="fences">
+                    <i class="fa fa-save"></i>
+                  </div>
+                    <div class="btn btn-sm btn-primary" onclick="clearFence()" v-show="fences">
+                      <i class="fa fa-times"></i>
+                    </div>
+              </div>
+              <div id="content">
+
+          </div>
+          <!--/.Card content-->
+      </div>
+    </div>
+
+    <div class="card" style="height:30%">
+
+        <!--Card image-->
+        <!--/.Card image-->
+
+        <!--Card content-->
+        <div class="card-block " >
+            <!--Title-->
+            <!-- Nav tabs -->
+            <!-- Nav tabs -->
+
+        </div>
+        <!--/.Card content-->
+
+    </div>
+</div>
+</div>
+</main>
+
+<footer>
+</footer>
+
+    <!-- /Start your project here-->
+
+
+    <!-- SCRIPTS -->
+
+    <!-- JQuery -->
+    <script type="text/javascript" src="./node_modules/mdbootstrap/js/jquery-2.2.3.min.js"></script>
+
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="./node_modules/mdbootstrap/js/tether.min.js"></script>
+
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="./node_modules/mdbootstrap/js/bootstrap.min.js"></script>
+
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="./node_modules/mdbootstrap/js/mdb.min.js"></script>
+</body>
+
+</html>
