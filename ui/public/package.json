@@ -10,6 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "arrive": "^2.3.1",
+    "bootstrap-table": "^1.11.0",
+    "firebase": "^3.6.4",
+    "handsontable": "^0.29.0",
     "mdbootstrap": "^4.1.1",
     "snackbar": "^1.0.2",
     "socket.io": "^1.4.8",

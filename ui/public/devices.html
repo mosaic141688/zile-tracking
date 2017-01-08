@@ -1,6 +1,7 @@
 <script type="text/javascript">
   (function(){
     console.log("Loading devices");
+    devicesVue();
   //  window.socket.emit("get-school",window.school._id);
   }());
 
@@ -22,18 +23,21 @@
 //  geocodeLatLng();
 
   //Vue from down here
-  (function () {
+  function devicesVue() {
        new Vue({
-           el: "#device-list",
+           el: "#dev-list-card",
            data: {
                devices:[],
                departments:[]
            },
            created:function () {
              var self=this;
-             for(id in window.school){
+             this.schoolSelected=window.hasOwnProperty("selectedSchool");
+             if(!window.hasOwnProperty("selectedSchool"))return;
+             console.log(window.hasOwnProperty("selectedSchool"));
                 var devRef=window.database().ref("devices");
-                 devRef.orderByChild("school").equalTo(id).on("child_added",(snap)=>{
+                 devRef.orderByChild("school").equalTo(window.selectedSchool.id).on("child_added",(snap)=>{
+                   console.log("Child Added");
                    var dev = snap.val();
                    dev._id=snap.key;
                    $.get("https://maps.googleapis.com/maps/api/geocode/json?latlng="+dev.location.lat+","+dev.location.lng+"&key=AIzaSyCDNUh9drF-hwfKtl_An8yDXjgzRWAIQEQ",(res)=>{
@@ -43,36 +47,6 @@
                  });
 
                  })
-
-        /*          var devicesRef=window.database().ref("schools").child(id).child("devices");
-                  devicesRef.on("value",(devs)=>{
-                    _devs=devs.val();
-                    console.log(_devs);
-                    for(device in _devs){
-                      console.log(device);
-
-                      _device=_devs[device];
-                      _device._id=device;
-                      self.devices.push(_device);
-                      self.getDevice(_device._id);
-                    }
-                  })*/
-             }
-
-            /* $.post("/school",{_id:window.school._id},(data)=>{
-               //this.devices=data[0].devices;
-               this.devices=[];
-               data[0].devices.forEach((_dev)=>_dev.lost?null:this.devices.sspush(_dev));
-               console.log(data);
-             });*/
-            /* setInterval(function(){
-               $.post("/school",{_id:window.school._id},(data)=>{
-                 //this.devices=data[0].devices;
-                 this.devices=[];
-                 data[0].devices.forEach((_dev)=>_dev.lost?null:this.devices.push(_dev));
-                 console.log(data);
-               })
-             }, 10000);*/
 
            },
            methods:{
@@ -84,6 +58,7 @@
                var self=this;
                var devRef= window.database().ref("devices").child(_dev_id);
                devRef.on("value",(dv)=>{
+                 if(!dv.val().location) return;
                    $.get("https://maps.googleapis.com/maps/api/geocode/json?latlng="+dv.val().location.lat+","+dv.val().location.lng+"&key=AIzaSyCDNUh9drF-hwfKtl_An8yDXjgzRWAIQEQ",(res)=>{
                    //  console.log(res.results[0].formatted_address)
                      //console.log(_devs[device]);
@@ -91,6 +66,7 @@
                      self.devices.forEach((dev)=>{
                        dev.address=dev._id==_dev_id?res.results[0].formatted_address:dev.address;
                        temp.push(dev);
+                       console.log(dev);
                      })
                      self.devices=[];
                      temp.forEach((tmp)=>{
@@ -125,65 +101,97 @@
              }
            }
        });
-   })()
+   }
+
+   function addDevice(){
+     console.log("Add device");
+     $("#new-dev").show("fast");
+   }
 
 </script>
 <!--Panel-->
+<div class="container" id="dev-list-card">
+  <div class="" v-if="schoolSelected">
+    <div class="row" >
+          <div class="col-md-5">
+              <div id="custom-search-input">
+                  <div class="input-group col-md-3">
+                      <input type="text" class="form-control input-sm" placeholder="Search" />
+                      <span class="input-group-btn">
+                          <button class="btn btn-info btn-sm" type="button">
+                              <i class="fa fa-search"></i>
+                          </button>
+                      </span>
+                  </div>
+              </div>
+          </div>
 
-	<div class="row">
-        <div class="col-md-5">
-            <div id="custom-search-input">
-                <div class="input-group col-md-3">
-                    <input type="text" class="form-control input-sm" placeholder="Search" />
-                    <span class="input-group-btn">
-                        <button class="btn btn-info btn-sm" type="button">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </span>
-                </div>
-            </div>
+          <div class="col-md-3" >
+              clear
+          </div>
+
+          <div class="col-md-3 btn btn-primary btn-sm" onclick="addDevice()">
+            + Add new
+          </div>
+  	</div>
+
+      <div class="table-responsive">
+          <table class="table table-sm">
+              <thead>
+              <tr>
+                  <th>#</th>
+                  <th>Last Seen</th>
+                  <th>Track</th>
+                  <th>Status</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr id="device-list" v-for="device in devices">
+                  <td>{{device._id}}</td>
+                  <td>date</td>
+                  <td><input type="checkbox" id="checkbox11"></td>
+                  <td>offline</td>
+              </tr>
+              </tbody>
+          </table>
+      </div>
+
+      </div>
+
+  <!--div class="row" style="margin:0px;">
+    <div class="col-sm-3 card" style="">
+      ID
+    </div>
+    <div class="col-sm-3 card" style="">
+      Last Seen
+    </div>
+    <div class="col-sm-3 card" style="">
+      Track
+    </div>
+
+    <div class="col-sm-3 card" style="">
+      status
+    </div>
+
+  </div>
+  <div class="" id="device-list" v-for="device in devices" >
+    <div class="row" style="font-size:14px;margin:0;">
+        <div class="col-sm-3" style="font-size:12px">
+          {{device._id}}
         </div>
-
-        <div class="col-md-3" >
-            clear
+        <div class="col-sm-3">
+            date
         </div>
-
-        <div class="col-md-3 btn btn-primary btn-sm">
-          + Add new
+        <div class="col-sm-3">
+             <input type="checkbox" id="checkbox11">
         </div>
-	</div>
+        <div class="col-sm-3">
+          <span class="">offline</span>
+        </div>
+    </div >
+  </div -->
 
-
-<div class="row" style="margin:0px;">
-  <div class="col-sm-3 card" style="">
-    ID
-  </div>
-  <div class="col-sm-3 card" style="">
-    Last Seen
-  </div>
-  <div class="col-sm-3 card" style="">
-    Track
-  </div>
-
-  <div class="col-sm-3 card" style="">
-    status
-  </div>
-
+  <h1 v-else>Select A School</h1>
 </div>
-<div class="" id="device-list" v-for="device in devices" >
-  <div class="row" style="font-size:14px;margin:0;">
-      <div class="col-sm-3" style="font-size:12px">
-        {{device._id}}
-      </div>
-      <div class="col-sm-3">
-          date
-      </div>
-      <div class="col-sm-3">
-           <input type="checkbox" id="checkbox11">
-      </div>
-      <div class="col-sm-3">
-        <span class="">offline</span>
-      </div>
-  </div>
-</div>
+
 <!--/.Panel-->

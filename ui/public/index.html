@@ -11,10 +11,9 @@
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
 
-    <title>My Zile</title>
+    <title>Izzy-Tracker</title>
     <script src="https://www.gstatic.com/firebasejs/3.5.1/firebase.js"></script>
     <script>
-      // Initialize Firebase
       var config = {
         apiKey: "AIzaSyC0CR9YjOJrC93vSNnFLjw-1dJ5D99RzkI",
         authDomain: "zile-66c59.firebaseapp.com",
@@ -39,6 +38,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="./node_modules/mdbootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="node_modules/bootstrap-table/dist/bootstrap-table.css" media="screen" title="no title">
 
     <!-- Material Design Bootstrap -->
     <link href="./node_modules/mdbootstrap/css/mdb.min.css" rel="stylesheet">
@@ -51,6 +51,7 @@
 
      <script type="text/javascript">
      //window.socket = io();
+     window.triangleCoords=[];
 
 function loadVue() {
  new Vue({
@@ -58,7 +59,8 @@ function loadVue() {
    data: {
      message: 'Hello Vue.js!',
      schools:[],
-     user:null
+     user:null,
+     selectedSchool:null,
    },
    created:function () {
      console.log("Hello World");
@@ -86,10 +88,19 @@ function loadVue() {
        window.localStorage.clear();
      },
      selectSchool:function(sch){
-        console.log(sch.id);
         window.selectedSchool=sch;
+        this.selectedSchool=sch;
+        window.triangleCoords=[];
+        if(sch.data.hasOwnProperty("premise")){
+          sch.data.premise.forEach((cd)=>{
+              window.triangleCoords.push({lat:cd.lat,lng:cd.lng})
+          })
+        }
+        else {
+          window.triangleCoords=[];
+        }
         loadMap();
-        loadDeviceList();
+        $("#devices").load("devices.html");
      }
    },
    computed:{
@@ -119,6 +130,8 @@ function logout(){
     // $('#overlay').hide("slow");
    })
     $("#content").load("/map.html");
+    $("#tabs-card").load("/tabs.html")
+    $("#dev-container").load("dev-reg.html");
     (function() {
       console.log(JSON.stringify(window.localStorage.getItem("school")));
       //window.localStorage.clear();
@@ -273,6 +286,10 @@ $('.quotes').html(i<quotes.length?"\""+quotes[i++]+"\"":"Please Check Your Inter
    window.database().ref("schools").child(window.selectedSchool.id).child("premise").set(triangleCoords);
  }
 
+ function clearFence(){
+     window.database().ref("schools").child(window.selectedSchool.id).child("premise").set(null);
+ }
+
 
 
      </script>
@@ -282,6 +299,27 @@ $('.quotes').html(i<quotes.length?"\""+quotes[i++]+"\"":"Please Check Your Inter
 <body id="main-app">
 
     <!-- Start your project here-->
+    <style media="screen">
+      #new-dev{
+          position: fixed;
+          top:0;
+          display: none;
+          left: 0;
+          width: 100%;
+          z-index: 6;
+      }
+    </style>
+    <div class="row" id="new-dev">
+        <div class="col-sm-4">
+
+        </div>
+        <div class="col-sm-4" id="dev-container">
+            Hello World
+        </div>
+        <div class="col-sm-4">
+
+        </div>
+    </div>
     <div class="popup row">
       <div class="col-md-4">
 
@@ -317,7 +355,7 @@ $('.quotes').html(i<quotes.length?"\""+quotes[i++]+"\"":"Please Check Your Inter
           <!--Collapse content-->
           <div class="collapse navbar-toggleable-xs" id="collapseEx2">
               <!--Navbar Brand-->
-              <a class="navbar-brand" href="#">My Zile</a>
+              <a class="navbar-brand" href="#">Izzy Tracker</a>
               <!--Links-->
               <ul class="nav navbar-nav">
                   <li class="nav-item active">
@@ -330,6 +368,8 @@ $('.quotes').html(i<quotes.length?"\""+quotes[i++]+"\"":"Please Check Your Inter
                       <a class="nav-link" href="#">About</a>
                   </li>
 
+
+
                   <li class="nav-item">
                     <div class="dropdown">
                         <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Schools
@@ -339,11 +379,34 @@ $('.quotes').html(i<quotes.length?"\""+quotes[i++]+"\"":"Please Check Your Inter
                           </ul>
                     </div>
                   </li>
+
+                  <li>
+                    <div class="pull-left btn-group" id="controls" style="z-index:5">
+
+                        <div class="togglebutton pull-left" style="z-index:5">
+                            <label>
+                                Edit GeoFence
+                              <input id="fences" type="checkbox" v-model="fences">
+                            </label>
+                        </div>
+                        <div class="btn btn-sm btn-primary" data-toggle="tooltip" title="Save Geofence" onclick="saveFence()" v-show="fences">
+                          <i class="fa fa-save"></i>
+                        </div>
+                          <div class="btn btn-sm btn-primary" data-toggle="tooltip" title="Clear School Geofence" onclick="clearFence()" v-show="fences">
+                            <i class="fa fa-times"></i>
+                          </div>
+                    </div>
+                  </li>
               </ul>
               <!--Search form-->
               <form class="form-inline">
                 <div class="nav-btn btn btn-default" onclick="logout()">
                   Logout
+                </div>
+              </form>
+              <form class="form-inline">
+                <div class="nav-btn btn btn-default" onclick="logout()">
+                  Login
                 </div>
               </form>
           </div>
@@ -360,7 +423,7 @@ $('.quotes').html(i<quotes.length?"\""+quotes[i++]+"\"":"Please Check Your Inter
 <div class="row" style="height: 100%;">
     <div class="col-md-5" style="height:100%;">
 <!--Card-->
-<div class="card" id="devices-card" style="height:50%;width:100%">
+<div v-if="selectedSchool" class="card" id="devices-card"  style="height:50%;width:100%">
 
     <!--Card image-->
     <!--/.Card image-->
@@ -371,56 +434,32 @@ $('.quotes').html(i<quotes.length?"\""+quotes[i++]+"\"":"Please Check Your Inter
         <!-- Nav tabs -->
         <!-- Nav tabs -->
 
+
     </div>
     <!--/.Card content-->
 
 </div>
 
 
-<div class="card" id="devices-card" style="height:40%">
+<div class="card" id="tabs-card" style="height:40%">
 
     <!--Card image-->
     <!--/.Card image-->
 
     <!--Card content-->
-    <div class="card-block">
-        <!--Title-->
-        <!-- Nav tabs -->
-        <!-- Nav tabs -->
-  <ul class="nav nav-tabs">
-      <li class="active"><a href="#">Home</a></li>
-      <li><a href="#">Menu 1</a></li>
-      <li><a href="#">Menu 2</a></li>
-      <li><a href="#">Menu 3</a></li>
-</ul>
 
-    </div>
     <!--/.Card content-->
 
 </div>
     </div>
     <div class="col-md-7" style="height: 100%;">
       <!--Card-->
-      <div class="card"  style="height: 60%;">
+      <div class="card"  style="height: 90%;">
 
           <div class="card-block"  style="height: 100%;">
               <!--Title-->
               <h4 class="card-title">Map</h4>
-              <div class="pull-left btn-group" id="controls" style="z-index:5">
 
-                  <div class="togglebutton pull-left" style="z-index:5">
-                      <label>
-                          Eddit GeoFence
-                        <input id="fences" type="checkbox" v-model="fences">
-                      </label>
-                  </div>
-                  <div class="btn btn-sm btn-primary" onclick="saveFence()" v-show="fences">
-                    <i class="fa fa-save"></i>
-                  </div>
-                    <div class="btn btn-sm btn-primary" onclick="clearFence()" v-show="fences">
-                      <i class="fa fa-times"></i>
-                    </div>
-              </div>
               <div id="content">
 
           </div>
@@ -428,7 +467,7 @@ $('.quotes').html(i<quotes.length?"\""+quotes[i++]+"\"":"Please Check Your Inter
       </div>
     </div>
 
-    <div class="card" style="height:30%">
+    <div class="card" style="height:0%">
 
         <!--Card image-->
         <!--/.Card image-->
@@ -438,6 +477,7 @@ $('.quotes').html(i<quotes.length?"\""+quotes[i++]+"\"":"Please Check Your Inter
             <!--Title-->
             <!-- Nav tabs -->
             <!-- Nav tabs -->
+            Hello World
 
         </div>
         <!--/.Card content-->

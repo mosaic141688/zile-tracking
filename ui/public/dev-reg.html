@@ -12,7 +12,7 @@
       //  var ref = window.database().ref("schools").child(id).child("devices").child($("#form3").val());
         devRev.child("student_name").set($("#st_name").val());
         devRev.child("student_id").set($("#st_id").val());
-        devRev.child("school").set(id);
+        devRev.child("school").set(window.selectedSchool.id);
         showError("Device Added Successfully");
       });
     }
@@ -58,7 +58,10 @@
             <label for="form3">Student ID</label>
         </div>
         <div class="text-xs-center">
-            <button class="btn btn-deep-orange" onclick="registerDevice()">Send</button>
+            <button class="btn btn-primary pull-right" onclick="registerDevice()">Send</button>
+        </div>
+        <div class="text-xs-center">
+            <button class="btn btn-danger pull-left" onclick="$('#new-dev').hide('fast');">Cancel</button>
         </div>
     </div>
 </div>
